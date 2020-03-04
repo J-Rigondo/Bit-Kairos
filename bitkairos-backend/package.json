@@ -1,0 +1,28 @@
+{
+  "name": "bitkairos-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jun Hyeong",
+  "license": "MIT",
+  "dependencies": {
+    "@mongoosejs/double": "^0.2.0",
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "koa": "^2.11.0",
+    "koa-router": "^8.0.8",
+    "mongoose": "^5.9.2",
+    "websocket": "^1.0.31"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.6",
+    "eslint": "^6.8.0",
+    "nodemon": "^2.0.2"
+  },
+  "scripts": {
+    "start:dev": "nodemon --exec babel-node src/ src/index.js --delay 2",
+    "crawler:dev": "nodemon --watch src/crawler/ src/crawler/index.js",
+    "test": "nodemon --exec babel-node src/crawler/index "
+  }
+}
