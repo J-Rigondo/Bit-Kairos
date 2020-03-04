@@ -17,7 +17,8 @@ client.on('connect', (connection) => {
 
   connection.on('close', () => {
     console.log('connection closed');
-    //TODO reconnect
+    console.log('reconnecting ...');
+    client.connect('wss://api2.poloniex.com');
   });
 
   connection.on('message', async (message) => {
@@ -35,7 +36,8 @@ client.on('connect', (connection) => {
           { upsert: false, new: true }
         );
 
-        console.log(updated);
+        console.log(`updated: ${name} ${new Date()}`);
+        //console.log(updated);
       } catch (e) {
         console.log(`update error: ${e}`);
       }
