@@ -12,8 +12,13 @@ export const registerInitialExchangeRate = async () => {
   const mongoKeys = keys.map(async (key) => {
     const ticker = tickers[key];
     const data = Object.assign({ name: key }, ticker);
-    const exchangeRate = await Rate.create(data);
-    return exchangeRate.save();
+
+    try {
+      const exchangeRate = await Rate.create(data);
+      return exchangeRate.save();
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   console.log(mongoKeys, 'success!');

@@ -33,5 +33,7 @@ const Rate = new mongoose.Schema({
   }
 });
 
+Rate.index({ name: 1 }, 'rateTypeIdentifier', { unique: true });
+
 const model = mongoose.model('Rate', Rate);
 export default model;

@@ -5,8 +5,13 @@ import api from './api';
 import './db/db.js';
 import './db/model/Rate';
 
+import './crawler/socket';
+import * as test from './crawler';
+
 dotenv.config();
 const { PORT } = process.env;
+
+test.registerInitialExchangeRate();
 
 const app = new Koa();
 const router = new Router();

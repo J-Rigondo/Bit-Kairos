@@ -23,6 +23,6 @@
   "scripts": {
     "start:dev": "nodemon --exec babel-node src/ src/index.js --delay 2",
     "crawler:dev": "nodemon --watch src/crawler/ src/crawler/index.js",
-    "test": "nodemon --exec babel-node src/crawler/index "
+    "test": "nodemon --exec babel-node src/crawler/socket.js "
   }
 }
