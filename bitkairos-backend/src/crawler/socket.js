@@ -27,6 +27,7 @@ client.on('connect', (connection) => {
 
     if (type === 1002) {
       const temp = polo.convertToTickerObject(data);
+      if (temp === null) return;
       const { name, ...rest } = temp;
 
       try {

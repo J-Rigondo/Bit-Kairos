@@ -13,6 +13,11 @@ export const getTickers = async () => {
 };
 
 export const convertToTickerObject = (data) => {
+  if (typeof data !== 'object') {
+    console.log(`not object : ${data}`);
+    return null;
+  }
+
   const keys = [
     'id',
     'last',

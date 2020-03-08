@@ -1,4 +1,4 @@
-@import '../../../styles/utils.scss';
+@import 'styles/utils.scss';
 
 .page {
   header {
@@ -10,7 +10,7 @@
   }
   .content {
     &.has-header {
-      padding-top: 3.5rem;
+      padding-top: 2rem;
     }
     &.responsive {
       width: 1200px;

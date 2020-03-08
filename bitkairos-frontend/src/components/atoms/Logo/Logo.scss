@@ -1,6 +1,17 @@
 .logo-wrapper {
-  img {
-    height: 3.5rem;
-    width: 12rem;
+  padding-left: 10rem;
+  display: flex;
+  align-items: center;
+  .header-icon {
+    font-size: 1.5rem;
+    color: white;
+  }
+  .header-logo {
+    font-family: 'Bree Serif', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
   }
 }

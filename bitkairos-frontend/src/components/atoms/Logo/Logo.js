@@ -1,8 +1,17 @@
 import React from 'react';
 import './Logo.scss';
-import logo from '../../../static/images/logo.png';
+import { faBitcoin } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 const Logo = () => {
-  return <img className="logo" src={logo} alt="logo" />;
+  return (
+    <>
+      <div className="header-icon">
+        <FontAwesomeIcon icon={faBitcoin} />
+      </div>
+      <div className="header-logo">BIT - KARIOS</div>
+    </>
+  );
 };
 
 export default Logo;

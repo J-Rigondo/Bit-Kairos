@@ -1,8 +1,13 @@
 import React from 'react';
-import PageTemplate from '../../templates/PageTemplate';
-import Header from '../../organisms/Header';
+import { PageTemplate, Header, Background } from 'components';
+
 const HomePage = () => {
-  return <PageTemplate header={<Header />}>home</PageTemplate>;
+  return (
+    <>
+      <PageTemplate header={<Header />}></PageTemplate>
+      <Background />
+    </>
+  );
 };
 
 export default HomePage;
