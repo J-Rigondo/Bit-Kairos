@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
+const { JWT_SECRET: secret } = process.env;
 
-const generateToken = async (payload, subject) => {
-  const { JWT_SECRET: secret } = process.env;
+export const generateToken = async (payload, subject) => {
   try {
     const result = jwt.sign(payload, secret, {
       issuer: 'bitkairos.com',
@@ -16,4 +16,11 @@ const generateToken = async (payload, subject) => {
   }
 };
 
-export default generateToken;
+export const decodeToken = async (token) => {
+  try {
+    const result = jwt.verify(token, secret);
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+};

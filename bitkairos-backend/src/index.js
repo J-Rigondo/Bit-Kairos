@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import Router from 'koa-router';
 import api from './api';
 import bodyParser from 'koa-bodyparser';
+import * as jwtMiddleware from 'lib/middlewares/jwt';
 import './db/db.js';
 import './db/model/Rate';
 import './db/model/User';
@@ -15,6 +16,7 @@ const app = new Koa();
 const router = new Router();
 
 router.use('/api', api.routes());
+app.use(jwtMiddleware.tokenCheck);
 app.use(bodyParser());
 app.use(router.routes());
 app.use(router.allowedMethods());

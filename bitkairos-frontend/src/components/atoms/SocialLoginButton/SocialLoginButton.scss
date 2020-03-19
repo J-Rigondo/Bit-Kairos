@@ -1,0 +1,32 @@
+@import 'styles/utils';
+
+.social-login-button {
+  display: flex;
+  height: 3rem;
+  margin-bottom: 2rem;
+  .google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: material-color('red', '600');
+    background: white;
+    border: 1px solid material-color('red', '600');
+    cursor: pointer;
+    border-radius: 0.2rem;
+    font-size: 1.2rem;
+    padding: 1.5rem;
+    font-weight: 600;
+    &:hover {
+      background: material-color('red', '600');
+      color: white;
+    }
+    &:active {
+      background: material-color('red', '600');
+    }
+    .google-text {
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
+  }
+}

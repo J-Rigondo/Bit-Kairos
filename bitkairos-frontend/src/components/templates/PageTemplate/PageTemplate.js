@@ -1,11 +1,18 @@
 import React from 'react';
-import './PageTemplate.scss';
+import styles from './PageTemplate.scss';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
 
 const PageTemplate = ({ header, children, responsive }) => {
   return (
     <div className="page">
       <header>{header}</header>
-      <div className={'content responsive ' + (header ? 'has-header' : '')}>
+      <div
+        className={cx('content responsive has-header', {
+          header
+        })}
+      >
         {children}
       </div>
     </div>

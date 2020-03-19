@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import crypto from 'crypto';
 import User from 'db/model/User';
-import token from 'lib/token';
+import * as token from 'lib/token';
 
 export const localRegister = async (ctx) => {
   const { PASSWORD_HASH_KEY: secret } = process.env;
@@ -46,10 +46,15 @@ export const localRegister = async (ctx) => {
         .update(password)
         .digest('hex')
     });
-    const result = await user.save();
-    ctx.body = result;
+    const registResult = await user.save();
+    ctx.body = {
+      displayName,
+      _id: registResult._id,
+      metaInfo: registResult.metaInfo
+    };
 
-    const accessToken = await token(
+    //create token
+    const accessToken = await token.generateToken(
       {
         user: {
           _id: result._id,
@@ -65,6 +70,90 @@ export const localRegister = async (ctx) => {
       maxAge: 1000 * 60 * 60 * 24 * 7
     });
   } catch (e) {
+    console.log(e);
     ctx.throw(500);
   }
+};
+
+export const localLogin = async (ctx) => {
+  const { PASSWORD_HASH_KEY: secret } = process.env;
+  const { body } = ctx.request;
+
+  //type check
+  const schema = Joi.object({
+    displayName: Joi.string().regex(/^[a-zA-Z0-9]{3,12}$/),
+    email: Joi.string()
+      .email()
+      .required(),
+    password: Joi.string()
+      .min(6)
+      .max(30)
+  });
+
+  const result = Joi.validate(body, schema);
+  if (result.error) {
+    ctx.status = 400;
+    return;
+  }
+
+  const { email, password } = body;
+
+  try {
+    //check email existancy
+    const exists = await User.findOne({ email });
+    if (!exists) {
+      ctx.status = 403;
+      return;
+    }
+
+    //password check
+    const hashed = crypto
+      .createHmac('sha256', secret)
+      .update(password)
+      .digest('hex');
+
+    if (exists.password !== hashed) {
+      ctx.status = 403; //wrong password
+      return;
+    }
+
+    //create token
+    const { _id, displayName, metaInfo } = exists;
+    const accessToken = await token.generateToken(
+      {
+        user: {
+          _id,
+          displayName
+        }
+      },
+      'user'
+    );
+
+    //set cookie
+    ctx.cookies.set('access_token', accessToken, {
+      httpOnly: false,
+      maxAge: 1000 * 60 * 60 * 24 * 7
+    });
+
+    ctx.body = {
+      displayName,
+      _id,
+      metaInfo
+    };
+  } catch (e) {
+    ctx.throw(e);
+  }
+};
+
+export const check = (ctx) => {
+  const { user } = ctx.request;
+
+  if (!user) {
+    ctx.status = 403;
+    return;
+  }
+
+  ctx.body = {
+    user
+  };
 };
