@@ -1,16 +1,17 @@
 @import 'styles/utils.scss';
 
 .nav-item {
-  margin-left: 4.5rem;
-  padding: 1rem 0;
+  margin-left: 3rem;
+  padding: 1rem;
+  transition: all 0.1s ease-in-out;
   &:last-child {
     margin-right: 3rem;
   }
-  color: white;
-  font-weight: 700;
+  color: material-color('grey', '900');
+  font-weight: 900;
   cursor: pointer;
   &:hover {
-    color: material-color('green', '500');
-    border-top: 2px solid material-color('green', '500');
+    color: #045a93;
+    box-shadow: inset 0 4px 0 #045a93;
   }
 }

@@ -1,0 +1,39 @@
+@import 'styles/utils';
+
+.select-currency {
+  display: flex;
+  .currency {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 1rem;
+    padding-top: 0.3rem;
+    font-size: 1.25rem;
+    border: 2px solid material-color('grey', '500');
+    border-radius: 10px;
+    transition: all 0.3s;
+    font-weight: 500;
+    color: material-color('grey', '700');
+    cursor: pointer;
+    &:hover {
+      @include material-shadow(2);
+      background: white;
+      color: #045a93;
+      border: 3px solid #045a93;
+    }
+    &.active,
+    &:active {
+      border: 3px solid #045a93;
+      color: #045a93;
+    }
+    .symbol {
+      font-weight: 700;
+    }
+    .text {
+      padding-left: 0.2rem;
+    }
+  }
+  .currency + .currency {
+    margin-left: 1rem;
+  }
+}

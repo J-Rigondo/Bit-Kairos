@@ -6,15 +6,30 @@ import {
   Input,
   Button,
   TextButton,
-  SocialLoginButton
+  SocialLoginButton,
+  InputError
 } from 'components';
 
 const cx = classNames.bind(styles);
 
-const LoginModal = ({ visible, mode, forms, onChangeMode, onChangeInput }) => {
-  const modeText = mode === 'login' ? '로그인' : '회원가입';
-  const invertedText = mode === 'login' ? '회원가입' : '로그인';
-  const { email, password, displayName } = forms.get(mode).toJS();
+const LoginModal = ({
+  visible,
+  mode,
+  forms,
+  error,
+  onChangeMode,
+  onChangeInput,
+  onLogin,
+  onRegister
+}) => {
+  const isLogin = mode === 'login';
+  const modeText = isLogin ? '로그인' : '회원가입';
+  const invertedText = isLogin ? '회원가입' : '로그인';
+  const onButtonClick = isLogin ? onLogin : onRegister;
+  const { email, password } = forms.toJS();
+  const { email: emailError, password: passwordError } = error
+    ? error.toJS()
+    : {};
 
   return (
     <Modal visible={visible}>
@@ -28,8 +43,8 @@ const LoginModal = ({ visible, mode, forms, onChangeMode, onChangeInput }) => {
             value={email}
             placeholder="이메일"
             fullWidth
-            big
           />
+          <InputError error={emailError} />
           <Input
             onChange={onChangeInput}
             name="password"
@@ -37,19 +52,11 @@ const LoginModal = ({ visible, mode, forms, onChangeMode, onChangeInput }) => {
             placeholder="비밀번호"
             type="password"
             fullWidth
-            big
           />
-          {mode === 'register' && (
-            <Input
-              onChange={onChangeInput}
-              name="displayName"
-              value={displayName}
-              placeholder="닉네임"
-              fullWidth
-              big
-            />
-          )}
-          <Button className={cx('login-btn')}>로그인</Button>
+          <InputError error={passwordError} />
+          <Button className={cx('login-btn')} onClick={onButtonClick}>
+            {modeText}
+          </Button>
           <div className={cx('textBtn-area')}>
             <TextButton onClick={onChangeMode}>{invertedText}</TextButton>
             <TextButton right>비밀번호 찾기</TextButton>

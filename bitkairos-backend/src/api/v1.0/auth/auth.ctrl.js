@@ -3,6 +3,38 @@ import crypto from 'crypto';
 import User from 'db/model/User';
 import * as token from 'lib/token';
 
+export const checkEmail = async (ctx) => {
+  const { email } = ctx.params;
+  if (!email) {
+    ctx.status = 400;
+    return;
+  }
+
+  try {
+    const account = await User.findOne({ email });
+
+    ctx.body = {
+      exists: !!account
+    };
+  } catch (e) {
+    ctx.throw(e, 500);
+  }
+};
+
+export const checkDisplayName = async (ctx) => {
+  const { displayName } = ctx.params;
+
+  try {
+    const account = await User.findOne({ displayName });
+
+    ctx.body = {
+      exists: !!account
+    };
+  } catch (e) {
+    ctx.throw(e, 500);
+  }
+};
+
 export const localRegister = async (ctx) => {
   const { PASSWORD_HASH_KEY: secret } = process.env;
   const { body } = ctx.request;
@@ -15,12 +47,22 @@ export const localRegister = async (ctx) => {
       .required(),
     password: Joi.string()
       .min(6)
-      .max(30)
+      .max(30),
+    initialMoney: Joi.object({
+      currency: Joi.string()
+        .allow('KRW', 'USD', 'BTC')
+        .required(),
+      index: Joi.number()
+        .min(0)
+        .max(2)
+        .required()
+    })
   });
 
   const result = Joi.validate(body, schema);
   if (result.error) {
     ctx.status = 400;
+    ctx.body = result.error;
     return;
   }
 
@@ -53,6 +95,7 @@ export const localRegister = async (ctx) => {
       metaInfo: registResult.metaInfo
     };
 
+    console.log(body);
     //create token
     const accessToken = await token.generateToken(
       {

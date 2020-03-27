@@ -9,8 +9,8 @@ const PageTemplate = ({ header, children, responsive }) => {
     <div className="page">
       <header>{header}</header>
       <div
-        className={cx('content responsive has-header', {
-          header
+        className={cx('content has-header', {
+          responsive
         })}
       >
         {children}

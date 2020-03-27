@@ -5,8 +5,9 @@ import { HeaderContainer } from 'containers';
 const HomePage = () => {
   return (
     <>
-      <PageTemplate header={<HeaderContainer />}></PageTemplate>
-      <Background />
+      <PageTemplate header={<HeaderContainer />}>
+        <Background main />
+      </PageTemplate>
     </>
   );
 };

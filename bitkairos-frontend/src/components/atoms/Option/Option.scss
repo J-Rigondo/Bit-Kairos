@@ -1,0 +1,43 @@
+@import 'styles/utils';
+
+.option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  .check-box {
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+    .blank {
+      display: block;
+    }
+    .checked {
+      display: none;
+    }
+  }
+  .text {
+    transform: translate(0, -10%);
+    margin-left: 0.5rem;
+  }
+  &:hover {
+    color: #045a93;
+  }
+  &:active,
+  &.active {
+    color: #045a93;
+    font-weight: 700;
+    .check-box {
+      .blank {
+        display: none;
+      }
+      .checked {
+        display: block;
+      }
+    }
+  }
+}
+
+.option + .option {
+  margin-top: 0.5rem;
+}

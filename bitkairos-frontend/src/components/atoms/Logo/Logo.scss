@@ -1,17 +1,21 @@
+@import 'styles/utils/';
+
 .logo-wrapper {
-  padding-left: 10rem;
-  display: flex;
-  align-items: center;
-  .header-icon {
-    font-size: 1.5rem;
-    color: white;
-  }
-  .header-logo {
-    font-family: 'Bree Serif', serif;
-    font-weight: 600;
-    font-size: 1.5rem;
-    color: white;
-    cursor: pointer;
-    padding: 0.5rem;
+  a {
+    padding-left: 10rem;
+    display: flex;
+    align-items: center;
+    .header-icon {
+      font-size: 1.5rem;
+      color: #045a93;
+    }
+    .header-logo {
+      font-family: 'Bree Serif', serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: material-color('grey', '900');
+      cursor: pointer;
+      padding: 0.5rem;
+    }
   }
 }

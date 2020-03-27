@@ -1,0 +1,16 @@
+@import 'styles/utils';
+
+.paper {
+  p {
+    color: material-color('grey', '700');
+    white-space: pre;
+  }
+  .complete {
+    @include material-shadow(2);
+    margin-top: 1rem;
+    width: 8rem;
+  }
+  .exists {
+    color: material-color('red', '600');
+  }
+}

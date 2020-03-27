@@ -1,60 +1,65 @@
+@import 'styles/utils';
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .background-main {
-  text-align: center;
-  background-image: url('../../../static/images/background.png');
+  background-image: url('../../../static/images/stock-background.jpg');
+  background-size: cover;
   position: relative;
   background-repeat: no-repeat;
   background-position: center;
-  height: 56vh;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 35rem;
+  z-index: 2;
+  color: white;
+
+  //apply brightness only background
+  &.blur:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    z-index: -1;
+    filter: brightness(30%);
+  }
+  .text-area {
+    width: 1000px;
+    z-index: z-index-for('back-text');
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    .main-logo {
+      animation-name: spin;
+      animation-duration: 2s;
+      animation-iteration-count: initial;
+      animation-timing-function: linear;
+      animation-direction: alternate;
+      font-size: 7rem;
+    }
+    h1 {
+      font-size: 3.5rem;
+    }
+    h3 {
+      color: material-color('grey', '400');
+    }
+  }
+}
+
+.register-background {
   width: 100%;
-  .back-title {
-    position: relative;
-    top: 5rem;
-    font-size: 2.5rem;
-  }
-  .back-sub {
-    position: relative;
-    top: 4rem;
-    font-size: 1.3rem;
-    font-weight: 500;
-  }
-  .bit-icon {
-    position: absolute;
-    background-image: url('../../../static/images/bit.png');
-    z-index: 1;
-    background-repeat: no-repeat;
-    width: 4rem;
-    height: 5rem;
-    top: 16rem;
-    left: 21rem;
-  }
-  .nav-icon {
-    position: absolute;
-    background-image: url('../../../static/images/nav.png');
-    z-index: 1;
-    background-repeat: no-repeat;
-    width: 4rem;
-    height: 5rem;
-    top: 9rem;
-    left: 81rem;
-  }
-  .x-icon {
-    position: absolute;
-    background-image: url('../../../static/images/x.png');
-    z-index: 1;
-    background-repeat: no-repeat;
-    width: 4rem;
-    height: 5rem;
-    top: 20rem;
-    left: 93rem;
-  }
-  .l-icon {
-    position: absolute;
-    background-image: url('../../../static/images/l.png');
-    z-index: 1;
-    background-repeat: no-repeat;
-    width: 4rem;
-    height: 5rem;
-    top: 2rem;
-    left: 29rem;
-  }
+  height: 35rem;
+  background: url('../../../static/images/back-register.jpg') no-repeat;
+  background-size: cover;
 }

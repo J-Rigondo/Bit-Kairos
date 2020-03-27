@@ -8,11 +8,13 @@
     margin-left: auto;
   }
   &:hover {
-    color: material-color('teal', '400');
-    border-bottom: 1px solid material-color('teal', '600');
+    color: #045a93;
+    font-weight: 800;
+    border-bottom: 1px solid #045a93;
   }
   &:active {
-    color: material-color('teal', '700');
-    border-bottom: 1px solid material-color('teal', '700');
+    color: #045a93;
+    font-weight: 800;
+    border-bottom: 1px solid #045a93;
   }
 }

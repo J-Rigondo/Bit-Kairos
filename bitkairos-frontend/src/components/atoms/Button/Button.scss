@@ -5,14 +5,16 @@
   display: inline-block;
   padding: 0.4rem 1.5rem;
   border-radius: 0.2rem;
-  font-weight: 600;
+  font-weight: 900;
+
   cursor: pointer;
   &.header-btn {
-    $theme-color: material-color('green', '700');
-    border: 0.1rem solid $theme-color;
+    $theme-color: #045a93;
+    border: 2px solid $theme-color;
     color: $theme-color;
     &:hover {
       background-color: $theme-color;
+      //border: 2px solid material-color('grey', '800');
       color: white;
     }
     &:active {
@@ -25,12 +27,33 @@
     text-align: center;
     color: white;
     font-size: 1.1rem;
-    background: material-color('teal', '300');
+    font-weight: bold;
+    background: #045a93;
     &:hover {
-      background: #6dd0c6;
+      background: #1e88e5;
     }
     &:active {
-      background: material-color('teal', '300');
+      background: #045a93;
     }
+  }
+  &.main-start {
+    border: 2px solid white;
+    background: transparent;
+    border-radius: 0.8rem;
+    padding: 1rem 7rem;
+    margin-top: 2rem;
+    &:hover {
+      color: black;
+      background: white;
+      border: 2px solid transparent;
+    }
+    &:active {
+      background: #eeeeee;
+    }
+  }
+  &.disabled {
+    background: material-color('grey', '300');
+    color: material-color('grey', '500');
+    cursor: default;
   }
 }
