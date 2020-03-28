@@ -17,6 +17,7 @@ const RegisterForm = ({
   onChangeDisplayName,
   onSetCurrency,
   currency,
+  error,
   optionIndex,
   onSetOptionIndex,
   onSubmit,
@@ -29,13 +30,15 @@ const RegisterForm = ({
       <p>거의 다 끝났습니다. 필요한 몇 가지 정보를 입력하세요.</p>
       <h3>닉네임</h3>
       <Input
+        maxLength={15}
         value={displayName}
         onChange={onChangeDisplayName}
         onBlur={onDisplayNameBlur}
       />
       {displayNameExists && (
-        <p className={cx('exists')}>이미 존재하는 닉네임입니다.</p>
+        <p className={cx('error')}>이미 존재하는 닉네임입니다.</p>
       )}
+      {error && <p className={cx('error')}>{error}</p>}
       <h3>초기자금 설정</h3>
       <p>
         초기자금을 설정하세요. {'\r\n'}

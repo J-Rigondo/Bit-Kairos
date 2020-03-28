@@ -27,9 +27,11 @@ const LoginModal = ({
   const invertedText = isLogin ? '회원가입' : '로그인';
   const onButtonClick = isLogin ? onLogin : onRegister;
   const { email, password } = forms.toJS();
-  const { email: emailError, password: passwordError } = error
-    ? error.toJS()
-    : {};
+  const {
+    email: emailError,
+    password: passwordError,
+    localLogin: localLoginError
+  } = error ? error.toJS() : {};
 
   return (
     <Modal visible={visible}>
@@ -57,6 +59,7 @@ const LoginModal = ({
           <Button className={cx('login-btn')} onClick={onButtonClick}>
             {modeText}
           </Button>
+          <InputError error={localLoginError} />
           <div className={cx('textBtn-area')}>
             <TextButton onClick={onChangeMode}>{invertedText}</TextButton>
             <TextButton right>비밀번호 찾기</TextButton>

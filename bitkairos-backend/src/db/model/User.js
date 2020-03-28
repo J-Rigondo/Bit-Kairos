@@ -1,5 +1,14 @@
 import mongoose from 'mongoose';
 
+const Wallet = new mongoose.Schema(
+  {
+    BTC: Number,
+    USD: Number,
+    KRW: Number
+  },
+  { _id: false }
+);
+
 const User = new mongoose.Schema({
   displayName: String,
   email: String,
@@ -14,10 +23,13 @@ const User = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  metaInfo: {
-    activated: {
-      type: Boolean,
-      default: false
+  metaInfo: {},
+  wallet: {
+    type: Wallet,
+    default: {
+      BTC: 0,
+      KRW: 0,
+      USD: 0
     }
   }
 });

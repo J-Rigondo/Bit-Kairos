@@ -21,3 +21,6 @@ export const register = ({
       index
     }
   });
+
+export const localLogin = ({ email, password }) =>
+  axios.post('/api/v1.0/auth/login/local', { email, password });

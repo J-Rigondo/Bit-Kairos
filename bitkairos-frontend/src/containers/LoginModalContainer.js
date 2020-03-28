@@ -7,6 +7,8 @@ import { LoginModal } from 'components';
 import * as baseActions from 'store/modules/base';
 import * as authActions from 'store/modules/auth';
 import * as registerActions from 'store/modules/register';
+import * as userActions from 'store/modules/user';
+import storage from 'lib/storage';
 import validate from 'validate.js';
 
 class LoginModalContainer extends Component {
@@ -36,12 +38,23 @@ class LoginModalContainer extends Component {
     });
   };
 
-  handleLoginClick = () => {
-    console.log('login');
+  handleLoginClick = async () => {
+    const { UserActions, AuthActions, forms } = this.props;
+    const { email, password } = forms.toJS();
+
+    try {
+      await AuthActions.localLogin({ email, password });
+      const { loginResult } = this.props;
+      storage.set('BIT_USER', loginResult.toJS());
+      UserActions.setUser(loginResult);
+      this.handleClose();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   handleRegisterClick = async () => {
-    const { AuthActions } = this.props;
+    const { AuthActions, forms } = this.props;
 
     //reset error
     AuthActions.setError(null);
@@ -61,7 +74,7 @@ class LoginModalContainer extends Component {
       }
     };
 
-    const form = this.props.forms.toJS();
+    const form = forms.toJS();
     const error = validate(form, constraints);
 
     if (error) {
@@ -107,11 +120,13 @@ export default connect(
     visible: state.auth.getIn(['modal', 'visible']),
     mode: state.auth.getIn(['modal', 'mode']),
     forms: state.auth.get('forms'),
-    error: state.auth.get('error')
+    error: state.auth.get('error'),
+    loginResult: state.auth.get('loginResult')
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),
-    RegisterActions: bindActionCreators(registerActions, dispatch)
+    RegisterActions: bindActionCreators(registerActions, dispatch),
+    UserActions: bindActionCreators(userActions, dispatch)
   })
 )(withRouter(onClickOutside(LoginModalContainer)));

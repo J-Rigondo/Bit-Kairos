@@ -31,9 +31,20 @@ class RegisterFormContainer extends Component {
       currency,
       optionIndex,
       authForm,
+      displayNameExists,
       RegisterActions
     } = this.props;
     const { email, password } = authForm.toJS();
+
+    if (displayNameExists) {
+      return;
+    }
+
+    if (displayName.length < 1) {
+      RegisterActions.setError('닉네임을 입력하세요');
+      return;
+    }
+    RegisterActions.setError(null);
 
     RegisterActions.submit({
       displayName,
@@ -66,7 +77,8 @@ class RegisterFormContainer extends Component {
       displayName,
       currency,
       optionIndex,
-      displayNameExists
+      displayNameExists,
+      error
     } = this.props;
 
     return (
@@ -74,6 +86,7 @@ class RegisterFormContainer extends Component {
         displayName={displayName}
         currency={currency}
         optionIndex={optionIndex}
+        error={error}
         displayNameExists={displayNameExists}
         onChangeDisplayName={this.handleChangeDisplayName}
         onSetCurrency={this.handleSetCurrency}
@@ -90,6 +103,7 @@ export default connect(
     authForm: state.auth.get('forms'),
     displayName: state.register.get('displayName'),
     currency: state.register.get('currency'),
+    error: state.register.get('error'),
     optionIndex: state.register.get('optionIndex'),
     displayNameExists: state.register.get('displayNameExists')
   }),

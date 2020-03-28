@@ -1,0 +1,19 @@
+.user-button {
+  $theme-color: #045a93;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 2px solid $theme-color;
+  color: $theme-color;
+  padding: 0.4rem 1.5rem;
+  border-radius: 0.2rem;
+  font-weight: 900;
+  svg {
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+  }
+  &:hover {
+  }
+  .username {
+  }
+}

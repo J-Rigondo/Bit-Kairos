@@ -41,18 +41,35 @@
     left: 50%;
     transform: translate(-50%, -50%);
     .main-logo {
+      transform: translate(10%, 10%);
       animation-name: spin;
       animation-duration: 2s;
-      animation-iteration-count: initial;
+      animation-iteration-count: 2;
       animation-timing-function: linear;
       animation-direction: alternate;
       font-size: 7rem;
+      &:hover {
+        animation-name: spin;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-direction: alternate;
+      }
     }
     h1 {
       font-size: 3.5rem;
     }
     h3 {
       color: material-color('grey', '400');
+    }
+    .welcome {
+      text-align: center;
+      display: inline-block;
+      border: 2px solid white;
+      background: transparent;
+      border-radius: 0.8rem;
+      padding: 1rem 7rem;
+      margin-top: 2rem;
     }
   }
 }

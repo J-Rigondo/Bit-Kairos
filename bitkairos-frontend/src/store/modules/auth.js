@@ -9,6 +9,7 @@ const SET_MODAL_MODE = 'auth/SET_MODAL_MODE';
 const CHANGE_INPUT = 'auth/CHANGE_INPUT';
 const SET_ERROR = 'auth/SET_ERROR';
 const CHECK_EMAIL = 'auth/CHECK_EMAIL';
+const LOCAL_LOGIN = 'auth/LOCAL_LOGIN';
 
 //action creator
 export const toggleLoginModal = createAction(TOGGLE_LOGIN_MODAL);
@@ -16,6 +17,7 @@ export const setModalMode = createAction(SET_MODAL_MODE);
 export const changeInput = createAction(CHANGE_INPUT);
 export const setError = createAction(SET_ERROR);
 export const checkEmail = createAction(CHECK_EMAIL, AuthAPI.checkEmail);
+export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin);
 
 //initial state
 const initialState = Map({
@@ -27,7 +29,8 @@ const initialState = Map({
     email: '',
     password: ''
   }),
-  error: null
+  error: null,
+  loginResult: null
 });
 
 //reducer
@@ -56,6 +59,20 @@ export default handleActions(
         return exists
           ? state.set('error', Map({ email: '메일이 이미 존재합니다.' }))
           : state;
+      }
+    }),
+    ...pender({
+      type: LOCAL_LOGIN,
+      onSuccess: (state, action) => {
+        const { data: loginResult } = action.payload;
+
+        return state.set('loginResult', Map(loginResult)).set('error', null);
+      },
+      onFailure: (state, action) => {
+        return state.set(
+          'error',
+          Map({ localLogin: '잘못된 계정 정보입니다.' })
+        );
       }
     })
   },

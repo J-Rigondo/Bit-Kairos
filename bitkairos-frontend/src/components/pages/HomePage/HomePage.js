@@ -1,12 +1,12 @@
 import React from 'react';
-import { PageTemplate, Background } from 'components';
-import { HeaderContainer } from 'containers';
+import { PageTemplate } from 'components';
+import { HeaderContainer, HomeContainer } from 'containers';
 
 const HomePage = () => {
   return (
     <>
       <PageTemplate header={<HeaderContainer />}>
-        <Background main />
+        <HomeContainer />
       </PageTemplate>
     </>
   );

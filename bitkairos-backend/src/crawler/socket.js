@@ -37,8 +37,8 @@ client.on('connect', (connection) => {
           { upsert: false, new: true }
         );
 
-        console.log(`updated: ${name} ${new Date()}`);
-        //console.log(updated);
+        //console.log(`updated: ${name} ${new Date()}`);
+        console.log(updated);
       } catch (e) {
         console.log(`update error: ${e}`);
       }

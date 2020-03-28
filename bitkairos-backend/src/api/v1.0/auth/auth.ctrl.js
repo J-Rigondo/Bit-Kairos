@@ -2,6 +2,7 @@ import Joi from 'joi';
 import crypto from 'crypto';
 import User from 'db/model/User';
 import * as token from 'lib/token';
+import { optionCurrency } from 'lib/variables';
 
 export const checkEmail = async (ctx) => {
   const { email } = ctx.params;
@@ -79,6 +80,13 @@ export const localRegister = async (ctx) => {
       return;
     }
 
+    const { currency, index } = body.initialMoney;
+    const value = optionCurrency[currency].initialValue * Math.pow(10, index);
+    const initial = {
+      currency,
+      value
+    };
+
     //create user account
     const user = new User({
       displayName,
@@ -86,8 +94,13 @@ export const localRegister = async (ctx) => {
       password: crypto
         .createHmac('sha256', secret)
         .update(password)
-        .digest('hex')
+        .digest('hex'),
+      metaInfo: {
+        initial
+      }
     });
+    user.wallet[currency] = value;
+
     const registResult = await user.save();
     ctx.body = {
       displayName,
@@ -95,7 +108,6 @@ export const localRegister = async (ctx) => {
       metaInfo: registResult.metaInfo
     };
 
-    console.log(body);
     //create token
     const accessToken = await token.generateToken(
       {
@@ -124,7 +136,6 @@ export const localLogin = async (ctx) => {
 
   //type check
   const schema = Joi.object({
-    displayName: Joi.string().regex(/^[a-zA-Z0-9]{3,12}$/),
     email: Joi.string()
       .email()
       .required(),
@@ -161,7 +172,7 @@ export const localLogin = async (ctx) => {
     }
 
     //create token
-    const { _id, displayName, metaInfo } = exists;
+    const { _id, displayName } = exists;
     const accessToken = await token.generateToken(
       {
         user: {
@@ -179,9 +190,8 @@ export const localLogin = async (ctx) => {
     });
 
     ctx.body = {
-      displayName,
       _id,
-      metaInfo
+      displayName
     };
   } catch (e) {
     ctx.throw(e);

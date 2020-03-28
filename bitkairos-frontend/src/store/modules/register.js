@@ -9,6 +9,7 @@ const SET_CURRENCY = 'register/SET_CURRENCY';
 const SET_OPTION_INDEX = '/register/SET_OPTION_INDEX';
 const CHECK_DISPLAYNAME = '/register/ CHECK_DISPLAYNAME';
 const SUBMIT = 'register/SUBMIT';
+const SET_ERROR = 'register/SET_ERROR';
 
 //action creator
 export const changeDisplayName = createAction(CHANGE_DISPLAYNAME);
@@ -19,13 +20,15 @@ export const checkDisplayName = createAction(
   AuthAPI.checkDisplayName
 );
 export const submit = createAction(SUBMIT, AuthAPI.register);
+export const setError = createAction(SET_ERROR);
 
 //initial state
 const initialState = Map({
   displayName: '',
   currency: 'KRW',
   optionIndex: 0,
-  displayNameExists: false
+  displayNameExists: false,
+  error: null
 });
 
 //reducer
@@ -45,6 +48,11 @@ export default handleActions(
       const { payload: index } = action;
 
       return state.set('optionIndex', index);
+    },
+    [SET_ERROR]: (state, action) => {
+      const { payload: error } = action;
+
+      return state.set('error', error);
     },
     ...pender({
       type: CHECK_DISPLAYNAME,
