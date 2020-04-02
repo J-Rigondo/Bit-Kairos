@@ -3,8 +3,10 @@ import { RegisterForm } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as registerActions from 'store/modules/register';
+import * as authActions from 'store/modules/auth';
+import * as userActions from 'store/modules/user';
 import debounce from 'lodash/debounce';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 class RegisterFormContainer extends Component {
   handleChangeDisplayName = (e) => {
@@ -25,14 +27,16 @@ class RegisterFormContainer extends Component {
     RegisterActions.setOptionIndex(index);
   };
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const {
       displayName,
       currency,
       optionIndex,
       authForm,
       displayNameExists,
-      RegisterActions
+      RegisterActions,
+      UserActions,
+      history
     } = this.props;
     const { email, password } = authForm.toJS();
 
@@ -44,17 +48,29 @@ class RegisterFormContainer extends Component {
       RegisterActions.setError('닉네임을 입력하세요');
       return;
     }
+
+    if (displayName.length < 3 || displayName.length > 12) {
+      RegisterActions.setError('3~12자리여야합니다.');
+      return;
+    }
+
     RegisterActions.setError(null);
 
-    RegisterActions.submit({
-      displayName,
-      email,
-      password,
-      initialMoney: {
-        currency,
-        index: optionIndex
-      }
-    });
+    try {
+      await RegisterActions.submit({
+        displayName,
+        email,
+        password,
+        initialMoney: {
+          currency,
+          index: optionIndex
+        }
+      });
+
+      const { result } = this.props;
+      UserActions.setUser(result);
+      history.push('/');
+    } catch (e) {}
   };
 
   handleDisplayNameBlur = () => {
@@ -105,9 +121,12 @@ export default connect(
     currency: state.register.get('currency'),
     error: state.register.get('error'),
     optionIndex: state.register.get('optionIndex'),
-    displayNameExists: state.register.get('displayNameExists')
+    displayNameExists: state.register.get('displayNameExists'),
+    result: state.register.get('result')
   }),
   (dispatch) => ({
-    RegisterActions: bindActionCreators(registerActions, dispatch)
+    RegisterActions: bindActionCreators(registerActions, dispatch),
+    AuthActions: bindActionCreators(authActions, dispatch),
+    UserActions: bindActionCreators(userActions, dispatch)
   })
 )(withRouter(RegisterFormContainer));

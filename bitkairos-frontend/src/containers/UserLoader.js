@@ -7,20 +7,37 @@ import * as userActions from 'store/modules/user';
 import storage from 'lib/storage';
 
 class UserLoader extends Component {
-  componentDidMount() {
+  checkLoginStatus = async () => {
+    const { UserActions } = this.props;
     const user = storage.get('BIT_USER');
+
     if (user) {
-      const { UserActions } = this.props;
       UserActions.setUser(user);
     }
+
+    try {
+      await UserActions.checkLoginStatus();
+      if (!user || user._id !== this.props.user.get('_id')) {
+        storage.set('BIT_USER', this.props.user.toJS());
+      }
+    } catch (e) {
+      storage.remove('BIT_USER');
+    }
+  };
+
+  componentDidMount() {
+    this.checkLoginStatus();
   }
+
   render() {
     return null;
   }
 }
 
 export default connect(
-  (state) => ({}),
+  (state) => ({
+    user: state.user.get('user')
+  }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),

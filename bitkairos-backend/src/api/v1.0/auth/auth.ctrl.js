@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import User from 'db/model/User';
 import * as token from 'lib/token';
 import { optionCurrency } from 'lib/variables';
+import { getProfile } from 'lib/social';
 
 export const checkEmail = async (ctx) => {
   const { email } = ctx.params;
@@ -42,7 +43,7 @@ export const localRegister = async (ctx) => {
 
   //type check
   const schema = Joi.object({
-    displayName: Joi.string().regex(/^[a-zA-Z0-9]{3,12}$/),
+    displayName: Joi.string().regex(/^[a-zA-Z0-9가-힣]{3,12}$/),
     email: Joi.string()
       .email()
       .required(),
@@ -71,11 +72,15 @@ export const localRegister = async (ctx) => {
 
   try {
     //check email existancy
-    const exists = await User.findOne({ email });
+    const exists = await User.findOne({
+      $or: [{ displayName }, { email }]
+    });
+
     if (exists) {
       ctx.status = 409;
+      const key = exists.email === email ? 'email' : 'displayName';
       ctx.body = {
-        message: 'email exists'
+        key
       };
       return;
     }
@@ -104,8 +109,8 @@ export const localRegister = async (ctx) => {
     const registResult = await user.save();
     ctx.body = {
       displayName,
-      _id: registResult._id,
-      metaInfo: registResult.metaInfo
+      _id: registResult._id
+      //metaInfo: registResult.metaInfo
     };
 
     //create token
@@ -209,4 +214,45 @@ export const check = (ctx) => {
   ctx.body = {
     user
   };
+};
+
+export const socialLogin = async (ctx) => {
+  const schema = Joi.object().keys({
+    accessToken: Joi.string().required()
+  });
+
+  const result = Joi.validate(ctx.request.body, schema);
+
+  if (result.error) {
+    ctx.status = 400;
+    return;
+  }
+
+  const { provider } = ctx.params;
+  const { accessToken } = ctx.request.body;
+
+  let profile = null;
+  try {
+    profile = await getProfile(provider, accessToken);
+  } catch (e) {
+    ctx.status = 403;
+    return;
+  }
+
+  const { id, email } = profile;
+  console.log(id, email);
+
+  ctx.body = {
+    profile,
+    provider,
+    accessToken
+  };
+};
+
+export const logout = (ctx) => {
+  ctx.cookies.set('access_token', null, {
+    maxAge: 0,
+    httpOnly: true
+  });
+  ctx.status = 204;
 };

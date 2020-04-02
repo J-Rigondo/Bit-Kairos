@@ -28,7 +28,9 @@ const initialState = Map({
   currency: 'KRW',
   optionIndex: 0,
   displayNameExists: false,
-  error: null
+  emailExists: false,
+  error: null,
+  result: null
 });
 
 //reducer
@@ -64,7 +66,11 @@ export default handleActions(
     ...pender({
       type: SUBMIT,
       onSuccess: (state, action) => {
-        return state;
+        const { data: user } = action.payload;
+        return state.set('result', user);
+      },
+      onFailure: (state, action) => {
+        return state.set('error', '특수기호는 사용할 수 없습니다.');
       }
     })
   },

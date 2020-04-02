@@ -4,10 +4,15 @@ import classNames from 'classnames/bind';
 import { IoLogoGoogleplus } from 'react-icons/io';
 const cx = classNames.bind(styles);
 
-const SocialLoginButton = () => {
+const SocialLoginButton = ({ onSocial }) => {
   return (
     <div className={cx('social-login-button')}>
-      <div className={cx('google')}>
+      <div
+        className={cx('google')}
+        onClick={() => {
+          onSocial('google');
+        }}
+      >
         <IoLogoGoogleplus />
         <span className={cx('google-text')}>Google</span>
       </div>

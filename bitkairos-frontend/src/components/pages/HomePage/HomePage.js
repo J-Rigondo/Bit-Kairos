@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageTemplate } from 'components';
+import { PageTemplate, Ticker, MarketWidget } from 'components';
 import { HeaderContainer, HomeContainer } from 'containers';
 
 const HomePage = () => {
@@ -7,6 +7,8 @@ const HomePage = () => {
     <>
       <PageTemplate header={<HeaderContainer />}>
         <HomeContainer />
+        <Ticker />
+        <MarketWidget />
       </PageTemplate>
     </>
   );

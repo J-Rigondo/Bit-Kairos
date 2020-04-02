@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import onClickOutside from 'react-onclickoutside';
@@ -9,6 +9,7 @@ import * as authActions from 'store/modules/auth';
 import * as registerActions from 'store/modules/register';
 import * as userActions from 'store/modules/user';
 import storage from 'lib/storage';
+import social from 'lib/social';
 import validate from 'validate.js';
 
 class LoginModalContainer extends Component {
@@ -93,8 +94,18 @@ class LoginModalContainer extends Component {
     // close the modal, open the register screen
     this.handleClose();
     const { history } = this.props;
-
     history.push('/register');
+  };
+
+  handleSocialLogin = async (provider) => {
+    const { AuthActions } = this.props;
+    let token = null;
+    try {
+      token = await social[provider]();
+      AuthActions.socialLogin(provider, token);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   render() {
@@ -110,6 +121,7 @@ class LoginModalContainer extends Component {
         onChangeInput={this.handleChangeInput}
         onLogin={this.handleLoginClick}
         onRegister={this.handleRegisterClick}
+        onSocial={this.handleSocialLogin}
       />
     );
   }

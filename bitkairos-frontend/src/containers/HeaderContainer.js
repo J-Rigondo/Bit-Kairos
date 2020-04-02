@@ -15,7 +15,7 @@ class HeaderContainer extends Component {
 
   render() {
     const { user } = this.props;
-    console.log(user);
+
     return (
       <Header user={user} onLoginButtonClick={this.handleLoginButtonClick} />
     );

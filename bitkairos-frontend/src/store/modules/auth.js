@@ -10,6 +10,7 @@ const CHANGE_INPUT = 'auth/CHANGE_INPUT';
 const SET_ERROR = 'auth/SET_ERROR';
 const CHECK_EMAIL = 'auth/CHECK_EMAIL';
 const LOCAL_LOGIN = 'auth/LOCAL_LOGIN';
+const SOCIAL_LOGIN = 'auth/SOCIAL_LOGIN';
 
 //action creator
 export const toggleLoginModal = createAction(TOGGLE_LOGIN_MODAL);
@@ -18,6 +19,7 @@ export const changeInput = createAction(CHANGE_INPUT);
 export const setError = createAction(SET_ERROR);
 export const checkEmail = createAction(CHECK_EMAIL, AuthAPI.checkEmail);
 export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin);
+export const socialLogin = createAction(SOCIAL_LOGIN, AuthAPI.socialLogin);
 
 //initial state
 const initialState = Map({

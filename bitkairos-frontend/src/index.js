@@ -4,7 +4,9 @@ import './styles/main.scss';
 import Root from './components/Root';
 import * as serviceWorker from './serviceWorker';
 import configureStore from 'store/configure';
+import social from 'lib/social';
 
+window.social = social;
 const store = configureStore();
 
 ReactDOM.render(<Root store={store} />, document.getElementById('root'));
