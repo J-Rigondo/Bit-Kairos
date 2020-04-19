@@ -7,7 +7,7 @@ import * as jwtMiddleware from 'lib/middlewares/jwt';
 import './db/db.js';
 import './db/model/Rate';
 import './db/model/User';
-//import './crawler/socket';
+import './crawler';
 
 dotenv.config();
 const { PORT } = process.env;

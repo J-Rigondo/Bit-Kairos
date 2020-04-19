@@ -35,7 +35,7 @@ class LoginModalContainer extends Component {
     const { name, value } = e.target;
     AuthActions.changeInput({
       name,
-      value
+      value,
     });
   };
 
@@ -64,15 +64,15 @@ class LoginModalContainer extends Component {
     const constraints = {
       email: {
         email: {
-          message: '^잘못된 형식의 이메일입니다'
-        }
+          message: '^잘못된 형식의 이메일입니다',
+        },
       },
       password: {
         length: {
           minimum: 6,
-          tooShort: '^비밀번호는 %{count}자 이상 입력하세요.'
-        }
-      }
+          tooShort: '^비밀번호는 %{count}자 이상 입력하세요.',
+        },
+      },
     };
 
     const form = forms.toJS();
@@ -98,11 +98,21 @@ class LoginModalContainer extends Component {
   };
 
   handleSocialLogin = async (provider) => {
-    const { AuthActions } = this.props;
+    const { AuthActions, history } = this.props;
     let token = null;
     try {
       token = await social[provider]();
-      AuthActions.socialLogin(provider, token);
+      await AuthActions.socialLogin(provider, token);
+
+      const { redirectToRegister } = this.props;
+
+      if (redirectToRegister) {
+        this.handleClose();
+        history.push('/register');
+        return;
+      }
+      this.handleClose();
+      window.location.href = '/';
     } catch (e) {
       console.log(e);
     }
@@ -133,12 +143,14 @@ export default connect(
     mode: state.auth.getIn(['modal', 'mode']),
     forms: state.auth.get('forms'),
     error: state.auth.get('error'),
-    loginResult: state.auth.get('loginResult')
+    loginResult: state.auth.get('loginResult'),
+    redirectToRegister: state.auth.get('redirectToRegister'),
+    socialInfo: state.auth.get('socialInfo'),
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),
     RegisterActions: bindActionCreators(registerActions, dispatch),
-    UserActions: bindActionCreators(userActions, dispatch)
+    UserActions: bindActionCreators(userActions, dispatch),
   })
 )(withRouter(onClickOutside(LoginModalContainer)));

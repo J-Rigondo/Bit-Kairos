@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(styles);
 
-const Header = ({ onLoginButtonClick, user }) => {
+const Header = ({ onLoginButtonClick, onLogoutClick, user }) => {
   return (
     <div className={cx('header')}>
       <div className={cx('logo-wrapper')}>
@@ -14,7 +14,10 @@ const Header = ({ onLoginButtonClick, user }) => {
       <div className={cx('right-side')}>
         <HeaderNav />
         {user ? (
-          <UserButton displayName={user.get('displayName')} />
+          <UserButton
+            displayName={user.get('displayName')}
+            onLogoutClick={onLogoutClick}
+          />
         ) : (
           <Button className={cx('header-btn')} onClick={onLoginButtonClick}>
             로그인

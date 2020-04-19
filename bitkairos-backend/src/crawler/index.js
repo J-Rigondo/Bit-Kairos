@@ -1,5 +1,12 @@
 import * as polo from '../lib/poloniex/index';
 import Rate from '../db/model/Rate';
+import currenyPairMap from 'lib/poloniex/map';
+import socket from './socket';
+
+const initialize = async () => {
+  await registerInitialExchangeRate();
+  socket();
+};
 
 export const registerInitialExchangeRate = async () => {
   const tickers = await polo.getTickers();
@@ -9,17 +16,25 @@ export const registerInitialExchangeRate = async () => {
   await Rate.remove({});
 
   //insert rate to db
-  const mongoKeys = keys.map(async (key) => {
+  const mongoKeys = keys.map((key) => {
     const ticker = tickers[key];
-    const data = Object.assign({ name: key }, ticker);
 
-    try {
-      const exchangeRate = await Rate.create(data);
-      return exchangeRate.save();
-    } catch (e) {
-      console.log(e);
+    if (!currenyPairMap[ticker.id.toString()]) {
+      return;
     }
+
+    const data = Object.assign({ name: key }, ticker);
+    const exchangeRate = new Rate(data);
+    return exchangeRate.save();
   });
+
+  try {
+    await Promise.all(mongoKeys);
+  } catch (e) {
+    console.log(e);
+  }
 
   console.log(mongoKeys, 'success!');
 };
+
+initialize();

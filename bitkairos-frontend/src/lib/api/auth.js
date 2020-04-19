@@ -10,7 +10,7 @@ export const register = ({
   displayName,
   email,
   password,
-  initialMoney: { currency, index }
+  initialMoney: { currency, index },
 }) =>
   axios.post('/api/v1.0/auth/register/local', {
     displayName,
@@ -18,8 +18,8 @@ export const register = ({
     password,
     initialMoney: {
       currency,
-      index
-    }
+      index,
+    },
   });
 
 export const localLogin = ({ email, password }) =>
@@ -31,8 +31,17 @@ export const logout = () => axios.get('/api/v1.0/auth/logout');
 
 export const socialLogin = (provider, accessToken) =>
   axios.post('/api/v1.0/auth/login/' + provider, {
-    accessToken
+    accessToken,
   });
 
-//temp
-window.logout = logout;
+export const socialRegister = ({
+  displayName,
+  accessToken,
+  initialMoney,
+  provider,
+}) =>
+  axios.post('/api/v1.0/auth/register/' + provider, {
+    displayName,
+    accessToken,
+    initialMoney,
+  });

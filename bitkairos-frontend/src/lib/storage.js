@@ -1,4 +1,4 @@
-export default (function() {
+export default (function () {
   const st = localStorage || {};
   return {
     set: (key, object) => {
@@ -12,6 +12,7 @@ export default (function() {
 
       try {
         const parsed = JSON.parse(value);
+
         return parsed;
       } catch (e) {
         return value;
@@ -22,6 +23,6 @@ export default (function() {
         return st.removeItem(key);
       }
       delete st[key];
-    }
+    },
   };
 })();

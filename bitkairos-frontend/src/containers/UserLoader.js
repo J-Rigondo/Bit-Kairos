@@ -10,7 +10,6 @@ class UserLoader extends Component {
   checkLoginStatus = async () => {
     const { UserActions } = this.props;
     const user = storage.get('BIT_USER');
-
     if (user) {
       UserActions.setUser(user);
     }
@@ -36,11 +35,11 @@ class UserLoader extends Component {
 
 export default connect(
   (state) => ({
-    user: state.user.get('user')
+    user: state.user.get('user'),
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),
-    UserActions: bindActionCreators(userActions, dispatch)
+    UserActions: bindActionCreators(userActions, dispatch),
   })
 )(UserLoader);

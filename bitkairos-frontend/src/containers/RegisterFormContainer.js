@@ -29,6 +29,7 @@ class RegisterFormContainer extends Component {
 
   handleSubmit = async () => {
     const {
+      socialInfo,
       displayName,
       currency,
       optionIndex,
@@ -36,10 +37,10 @@ class RegisterFormContainer extends Component {
       displayNameExists,
       RegisterActions,
       UserActions,
-      history
+      history,
     } = this.props;
-    const { email, password } = authForm.toJS();
 
+    //displayName check
     if (displayNameExists) {
       return;
     }
@@ -56,6 +57,34 @@ class RegisterFormContainer extends Component {
 
     RegisterActions.setError(null);
 
+    console.log(socialInfo);
+    //social register
+    if (socialInfo) {
+      const { accessToken, provider } = socialInfo;
+      console.log(socialInfo);
+      try {
+        await RegisterActions.socialRegister({
+          displayName,
+          accessToken,
+          provider,
+          initialMoney: {
+            currency,
+            index: optionIndex,
+          },
+        });
+        const { result } = this.props;
+        UserActions.setUser(result);
+        history.push('/');
+      } catch (e) {
+        console.log(e);
+      }
+
+      return;
+    }
+
+    //local register
+    const { email, password } = authForm.toJS();
+
     try {
       await RegisterActions.submit({
         displayName,
@@ -63,8 +92,8 @@ class RegisterFormContainer extends Component {
         password,
         initialMoney: {
           currency,
-          index: optionIndex
-        }
+          index: optionIndex,
+        },
       });
 
       const { result } = this.props;
@@ -94,7 +123,7 @@ class RegisterFormContainer extends Component {
       currency,
       optionIndex,
       displayNameExists,
-      error
+      error,
     } = this.props;
 
     return (
@@ -122,11 +151,12 @@ export default connect(
     error: state.register.get('error'),
     optionIndex: state.register.get('optionIndex'),
     displayNameExists: state.register.get('displayNameExists'),
-    result: state.register.get('result')
+    result: state.register.get('result'),
+    socialInfo: state.auth.get('socialInfo'),
   }),
   (dispatch) => ({
     RegisterActions: bindActionCreators(registerActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),
-    UserActions: bindActionCreators(userActions, dispatch)
+    UserActions: bindActionCreators(userActions, dispatch),
   })
 )(withRouter(RegisterFormContainer));

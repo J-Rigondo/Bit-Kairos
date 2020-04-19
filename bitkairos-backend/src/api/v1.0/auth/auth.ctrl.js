@@ -16,7 +16,7 @@ export const checkEmail = async (ctx) => {
     const account = await User.findOne({ email });
 
     ctx.body = {
-      exists: !!account
+      exists: !!account,
     };
   } catch (e) {
     ctx.throw(e, 500);
@@ -30,7 +30,7 @@ export const checkDisplayName = async (ctx) => {
     const account = await User.findOne({ displayName });
 
     ctx.body = {
-      exists: !!account
+      exists: !!account,
     };
   } catch (e) {
     ctx.throw(e, 500);
@@ -43,22 +43,15 @@ export const localRegister = async (ctx) => {
 
   //type check
   const schema = Joi.object({
-    displayName: Joi.string().regex(/^[a-zA-Z0-9가-힣]{3,12}$/),
-    email: Joi.string()
-      .email()
+    displayName: Joi.string()
+      .regex(/^[a-zA-Z0-9가-힣]{3,12}$/)
       .required(),
-    password: Joi.string()
-      .min(6)
-      .max(30),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).max(30),
     initialMoney: Joi.object({
-      currency: Joi.string()
-        .allow('KRW', 'USD', 'BTC')
-        .required(),
-      index: Joi.number()
-        .min(0)
-        .max(2)
-        .required()
-    })
+      currency: Joi.string().allow('KRW', 'USD', 'BTC').required(),
+      index: Joi.number().min(0).max(2).required(),
+    }),
   });
 
   const result = Joi.validate(body, schema);
@@ -73,14 +66,14 @@ export const localRegister = async (ctx) => {
   try {
     //check email existancy
     const exists = await User.findOne({
-      $or: [{ displayName }, { email }]
+      $or: [{ displayName }, { email }],
     });
 
     if (exists) {
       ctx.status = 409;
       const key = exists.email === email ? 'email' : 'displayName';
       ctx.body = {
-        key
+        key,
       };
       return;
     }
@@ -89,7 +82,7 @@ export const localRegister = async (ctx) => {
     const value = optionCurrency[currency].initialValue * Math.pow(10, index);
     const initial = {
       currency,
-      value
+      value,
     };
 
     //create user account
@@ -101,15 +94,15 @@ export const localRegister = async (ctx) => {
         .update(password)
         .digest('hex'),
       metaInfo: {
-        initial
-      }
+        initial,
+      },
     });
     user.wallet[currency] = value;
 
     const registResult = await user.save();
     ctx.body = {
       displayName,
-      _id: registResult._id
+      _id: registResult._id,
       //metaInfo: registResult.metaInfo
     };
 
@@ -117,9 +110,9 @@ export const localRegister = async (ctx) => {
     const accessToken = await token.generateToken(
       {
         user: {
-          _id: result._id,
-          displayName
-        }
+          _id: registResult._id,
+          displayName,
+        },
       },
       'user'
     );
@@ -127,7 +120,7 @@ export const localRegister = async (ctx) => {
     // configure accessToken to httpOnly cookie
     const temp = ctx.cookies.set('access_token', accessToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
   } catch (e) {
     console.log(e);
@@ -141,12 +134,8 @@ export const localLogin = async (ctx) => {
 
   //type check
   const schema = Joi.object({
-    email: Joi.string()
-      .email()
-      .required(),
-    password: Joi.string()
-      .min(6)
-      .max(30)
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).max(30),
   });
 
   const result = Joi.validate(body, schema);
@@ -182,8 +171,8 @@ export const localLogin = async (ctx) => {
       {
         user: {
           _id,
-          displayName
-        }
+          displayName,
+        },
       },
       'user'
     );
@@ -191,18 +180,19 @@ export const localLogin = async (ctx) => {
     //set cookie
     ctx.cookies.set('access_token', accessToken, {
       httpOnly: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
     ctx.body = {
       _id,
-      displayName
+      displayName,
     };
   } catch (e) {
     ctx.throw(e);
   }
 };
 
+//login status check
 export const check = (ctx) => {
   const { user } = ctx.request;
 
@@ -212,13 +202,13 @@ export const check = (ctx) => {
   }
 
   ctx.body = {
-    user
+    user,
   };
 };
 
 export const socialLogin = async (ctx) => {
   const schema = Joi.object().keys({
-    accessToken: Joi.string().required()
+    accessToken: Joi.string().required(),
   });
 
   const result = Joi.validate(ctx.request.body, schema);
@@ -231,6 +221,7 @@ export const socialLogin = async (ctx) => {
   const { provider } = ctx.params;
   const { accessToken } = ctx.request.body;
 
+  //google auth
   let profile = null;
   try {
     profile = await getProfile(provider, accessToken);
@@ -238,21 +229,227 @@ export const socialLogin = async (ctx) => {
     ctx.status = 403;
     return;
   }
+  if (!profile) {
+    ctx.status = 403;
+    return;
+  }
 
   const { id, email } = profile;
-  console.log(id, email);
 
+  //check social account existence
+  let user = null;
+  try {
+    const key = `social.${provider}.id`;
+    user = await User.findOne({
+      [key]: id,
+    });
+  } catch (e) {
+    ctx.throw(e);
+  }
+
+  if (user) {
+    const { _id, displayName } = user;
+    try {
+      const newToken = await token.generateToken(
+        {
+          user: {
+            _id,
+            displayName,
+          },
+        },
+        'user'
+      );
+      ctx.cookies.set('access_token', newToken, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+      });
+    } catch (e) {
+      ctx.throw(e);
+    }
+    ctx.body = {
+      _id,
+      displayName,
+    };
+    return;
+  }
+
+  //merge duplicated email
+  if (!user && email) {
+    let dupl = null;
+    try {
+      dupl = await User.findOne({ email });
+    } catch (e) {
+      ctx.throw(e);
+    }
+
+    if (dupl) {
+      dupl.social[provider] = {
+        id,
+        accessToken,
+      };
+
+      try {
+        await dupl.save();
+      } catch (e) {
+        ctx.throw(e);
+      }
+
+      const { _id, displayName } = dupl;
+      try {
+        const newToken = await token.generateToken(
+          {
+            user: {
+              _id,
+              displayName,
+            },
+          },
+          'user'
+        );
+        ctx.cookies.set('access_token', newToken, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+        });
+      } catch (e) {
+        ctx.throw(e);
+      }
+
+      ctx.body = {
+        _id,
+        displayName,
+      };
+    }
+  }
   ctx.body = {
-    profile,
+    accessToken,
     provider,
-    accessToken
   };
+};
+
+export const socialRegister = async (ctx) => {
+  const { body } = ctx.request;
+  const { provider } = ctx.params;
+
+  const schema = Joi.object({
+    displayName: Joi.string()
+      .regex(/^[a-zA-Z0-9가-힣]{3,12}$/)
+      .required(),
+    accessToken: Joi.string().required(),
+    initialMoney: Joi.object({
+      currency: Joi.string().allow('KRW', 'USD', 'BTC').required(),
+      index: Joi.number().min(0).max(2).required(),
+    }),
+  });
+
+  const result = Joi.validate(body, schema);
+
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
+    return;
+  }
+
+  const { displayName, accessToken, initialMoney } = body;
+
+  //check google auth
+  let profile = null;
+  try {
+    profile = await getProfile(provider, accessToken);
+  } catch (e) {
+    ctx.status = 403;
+  }
+
+  if (!profile) {
+    ctx.status = 403;
+    return;
+  }
+
+  const { email: socialEmail, id: socialId } = profile;
+
+  //check email existence
+  try {
+    const exists = await User.findOne({ email: socialEmail });
+    if (exists) {
+      ctx.body = {
+        key: 'email',
+      };
+      ctx.status = 409;
+      return;
+    }
+  } catch (e) {
+    ctx.throw(e);
+  }
+
+  //check displayName existence
+  try {
+    const exists = await User.findOne({ displayName });
+    if (exists) {
+      ctx.body = {
+        key: 'displayName',
+      };
+      ctx.status = 409;
+    }
+  } catch (e) {
+    ctx.throw(e);
+  }
+
+  //initialMoney setting
+  const { currency, index } = initialMoney;
+  const value = optionCurrency[currency].initialValue * Math.pow(10, index);
+  const initial = {
+    currency,
+    value,
+  };
+
+  const newUser = new User({
+    displayName,
+    email: socialEmail,
+    social: {
+      [provider]: {
+        id: socialId,
+        accessToken,
+      },
+    },
+    metaInfo: {
+      initial,
+    },
+  });
+
+  let saveResult = null;
+  try {
+    saveResult = await newUser.save();
+  } catch (e) {
+    ctx.throw(e);
+  }
+
+  const { _id, displayName: saveName } = saveResult;
+  ctx.body = {
+    displayName: saveName,
+    _id,
+  };
+
+  try {
+    const newToken = await token.generateToken(
+      {
+        user: {
+          _id,
+          displayNam: saveName,
+        },
+      },
+      'user'
+    );
+    ctx.cookies.set('access_token', newToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+  } catch (e) {
+    ctx.throw(e);
+  }
 };
 
 export const logout = (ctx) => {
   ctx.cookies.set('access_token', null, {
     maxAge: 0,
-    httpOnly: true
+    httpOnly: true,
   });
   ctx.status = 204;
 };

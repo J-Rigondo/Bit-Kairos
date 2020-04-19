@@ -10,7 +10,7 @@ const Logo = () => {
       <div className="header-icon">
         <FontAwesomeIcon icon={faBitcoin} />
       </div>
-      <div className="header-logo">BIT - KARIOS</div>
+      <div className="header-logo">BIT - KAIROS</div>
     </Link>
   );
 };

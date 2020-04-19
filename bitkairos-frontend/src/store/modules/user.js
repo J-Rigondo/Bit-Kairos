@@ -20,7 +20,7 @@ export const logout = createAction(LOGOUT, AuthAPI.logout);
 const initialState = Map({
   logged: false,
   processed: false,
-  user: null
+  user: null,
 });
 
 //reducer
@@ -38,8 +38,8 @@ export default handleActions(
       },
       onFailure: (state, action) => {
         return state.set('user', null).set('processed', true);
-      }
-    })
+      },
+    }),
   },
   initialState
 );

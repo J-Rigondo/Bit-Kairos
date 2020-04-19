@@ -1,6 +1,7 @@
 import websocket from 'websocket';
 import * as polo from '../lib/poloniex/index';
 import Rate from '../db/model/Rate';
+import log from 'lib/log';
 
 const wsClient = websocket.client;
 
@@ -27,7 +28,9 @@ client.on('connect', (connection) => {
 
     if (type === 1002) {
       const temp = polo.convertToTickerObject(data);
-      if (temp === null) return;
+
+      if (temp === null || temp.name === undefined) return;
+
       const { name, ...rest } = temp;
 
       try {
@@ -38,9 +41,9 @@ client.on('connect', (connection) => {
         );
 
         //console.log(`updated: ${name} ${new Date()}`);
-        console.log(updated);
+        log('updated', name);
       } catch (e) {
-        console.log(`update error: ${e}`);
+        log.error(`update error: ${e}`);
       }
     }
   });
@@ -54,4 +57,8 @@ client.on('connect', (connection) => {
   sendNumber();
 });
 
-client.connect('wss://api2.poloniex.com');
+function conn() {
+  client.connect('wss://api2.poloniex.com');
+}
+
+export default conn;

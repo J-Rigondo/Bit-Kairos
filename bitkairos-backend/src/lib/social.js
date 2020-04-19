@@ -8,11 +8,12 @@ const getGoogleProfile = async (accessToken) => {
   try {
     const authClient = new OAuth2(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
     authClient.setCredentials({
-      access_token: accessToken
+      access_token: accessToken,
     });
     const profile = await oauth2.userinfo.get({
-      auth: authClient
+      auth: authClient,
     });
+
     return profile.data;
   } catch (e) {
     console.log(e);
@@ -21,7 +22,7 @@ const getGoogleProfile = async (accessToken) => {
 
 export const getProfile = (provider, accessToken) => {
   const getters = {
-    google: getGoogleProfile
+    google: getGoogleProfile,
   };
 
   return getters[provider](accessToken);

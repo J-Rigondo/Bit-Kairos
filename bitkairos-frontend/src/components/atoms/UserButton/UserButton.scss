@@ -1,3 +1,5 @@
+@import 'styles/utils';
+
 .user-button {
   $theme-color: #045a93;
   display: flex;
@@ -8,12 +10,31 @@
   padding: 0.4rem 1.5rem;
   border-radius: 0.2rem;
   font-weight: 900;
+  cursor: pointer;
+  position: relative;
   svg {
     font-size: 1.25rem;
     margin-right: 0.5rem;
   }
   &:hover {
+    color: white;
+    background: #045a93;
+    .user-menu {
+      display: block;
+    }
   }
-  .username {
+  .user-menu {
+    padding: 0.4rem;
+    text-align: center;
+    color: #045a93;
+    display: none;
+    position: absolute;
+    background: white;
+    border: 2px solid material-color('grey', '300');
+    border-radius: 0.2rem;
+    width: 100%;
+
+    top: 60%;
+    left: 0;
   }
 }

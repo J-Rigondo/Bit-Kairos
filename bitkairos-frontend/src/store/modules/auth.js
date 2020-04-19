@@ -25,21 +25,27 @@ export const socialLogin = createAction(SOCIAL_LOGIN, AuthAPI.socialLogin);
 const initialState = Map({
   modal: Map({
     visible: false,
-    mode: 'login'
+    mode: 'login',
   }),
   forms: Map({
     email: '',
-    password: ''
+    password: '',
   }),
   error: null,
-  loginResult: null
+  loginResult: null,
+  socialInfo: null,
+  redirectToRegister: false,
 });
 
 //reducer
 export default handleActions(
   {
     [TOGGLE_LOGIN_MODAL]: (state, action) => {
-      return state.updateIn(['modal', 'visible'], (visible) => !visible);
+      const visible = state.getIn(['modal', 'visible']);
+      if (visible) {
+        return state.setIn(['modal', 'visible'], false);
+      }
+      return state.setIn(['modal', 'visible'], true);
     },
     [SET_MODAL_MODE]: (state, action) => {
       return state
@@ -61,7 +67,7 @@ export default handleActions(
         return exists
           ? state.set('error', Map({ email: '메일이 이미 존재합니다.' }))
           : state;
-      }
+      },
     }),
     ...pender({
       type: LOCAL_LOGIN,
@@ -75,8 +81,21 @@ export default handleActions(
           'error',
           Map({ localLogin: '잘못된 계정 정보입니다.' })
         );
-      }
-    })
+      },
+    }),
+    ...pender({
+      type: SOCIAL_LOGIN,
+      onSuccess: (state, action) => {
+        const { data: loginResult } = action.payload;
+
+        if (loginResult.accessToken) {
+          return state
+            .set('redirectToRegister', true)
+            .set('socialInfo', loginResult);
+        }
+        return state.set('loginResult', Map(loginResult)).set('error', null);
+      },
+    }),
   },
   initialState
 );
