@@ -14,9 +14,9 @@ class HeaderContainer extends Component {
     AuthActions.setModalMode('login');
   };
 
-  handleLogoutClick = () => {
+  handleLogoutClick = async () => {
     const { UserActions } = this.props;
-    UserActions.logout();
+    await UserActions.logout();
     window.location.href = '/';
   };
 
@@ -35,11 +35,11 @@ class HeaderContainer extends Component {
 
 export default connect(
   (state) => ({
-    user: state.user.get('user'),
+    user: state.user.get('user')
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),
-    UserActions: bindActionCreators(userActions, dispatch),
+    UserActions: bindActionCreators(userActions, dispatch)
   })
 )(HeaderContainer);

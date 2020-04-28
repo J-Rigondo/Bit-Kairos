@@ -23,7 +23,13 @@ const User = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  metaInfo: {},
+  metaInfo: {
+    initial: {
+      currency: String,
+      value: Number
+    },
+    pinned: [String]
+  },
   wallet: {
     type: Wallet,
     default: {

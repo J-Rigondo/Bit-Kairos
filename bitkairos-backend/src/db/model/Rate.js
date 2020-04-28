@@ -30,7 +30,8 @@ const Rate = new mongoose.Schema({
   },
   low24hr: {
     type: Number
-  }
+  },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 Rate.index({ name: 1 }, 'rateTypeIdentifier', { unique: true });

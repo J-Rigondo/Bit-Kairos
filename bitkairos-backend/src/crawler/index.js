@@ -13,7 +13,7 @@ export const registerInitialExchangeRate = async () => {
   const keys = Object.keys(tickers);
 
   //remove prev-data
-  await Rate.remove({});
+  await Rate.deleteMany({});
 
   //insert rate to db
   const mongoKeys = keys.map((key) => {
@@ -34,7 +34,7 @@ export const registerInitialExchangeRate = async () => {
     console.log(e);
   }
 
-  console.log(mongoKeys, 'success!');
+  //console.log(mongoKeys, 'success!');
 };
 
 initialize();

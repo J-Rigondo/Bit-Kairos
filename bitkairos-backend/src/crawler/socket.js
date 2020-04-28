@@ -2,6 +2,9 @@ import websocket from 'websocket';
 import * as polo from '../lib/poloniex/index';
 import Rate from '../db/model/Rate';
 import log from 'lib/log';
+import redis from 'redis';
+
+const publisher = redis.createClient();
 
 const wsClient = websocket.client;
 
@@ -36,12 +39,20 @@ client.on('connect', (connection) => {
       try {
         const updated = await Rate.findOneAndUpdate(
           { name },
-          { rest },
+          { ...rest, updatedAt: new Date() },
           { upsert: false, new: true }
         );
 
         //console.log(`updated: ${name} ${new Date()}`);
-        log('updated', name);
+        //log('updated', name);
+        const message = JSON.stringify({
+          type: 0,
+          data: {
+            ...rest,
+            updatedAt: new Date()
+          }
+        });
+        publisher.publish('tickers', message);
       } catch (e) {
         log.error(`update error: ${e}`);
       }

@@ -37,7 +37,7 @@ class RegisterFormContainer extends Component {
       displayNameExists,
       RegisterActions,
       UserActions,
-      history,
+      history
     } = this.props;
 
     //displayName check
@@ -57,11 +57,10 @@ class RegisterFormContainer extends Component {
 
     RegisterActions.setError(null);
 
-    console.log(socialInfo);
     //social register
     if (socialInfo) {
       const { accessToken, provider } = socialInfo;
-      console.log(socialInfo);
+
       try {
         await RegisterActions.socialRegister({
           displayName,
@@ -69,8 +68,8 @@ class RegisterFormContainer extends Component {
           provider,
           initialMoney: {
             currency,
-            index: optionIndex,
-          },
+            index: optionIndex
+          }
         });
         const { result } = this.props;
         UserActions.setUser(result);
@@ -92,8 +91,8 @@ class RegisterFormContainer extends Component {
         password,
         initialMoney: {
           currency,
-          index: optionIndex,
-        },
+          index: optionIndex
+        }
       });
 
       const { result } = this.props;
@@ -123,7 +122,7 @@ class RegisterFormContainer extends Component {
       currency,
       optionIndex,
       displayNameExists,
-      error,
+      error
     } = this.props;
 
     return (
@@ -152,11 +151,11 @@ export default connect(
     optionIndex: state.register.get('optionIndex'),
     displayNameExists: state.register.get('displayNameExists'),
     result: state.register.get('result'),
-    socialInfo: state.auth.get('socialInfo'),
+    socialInfo: state.auth.get('socialInfo')
   }),
   (dispatch) => ({
     RegisterActions: bindActionCreators(registerActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),
-    UserActions: bindActionCreators(userActions, dispatch),
+    UserActions: bindActionCreators(userActions, dispatch)
   })
 )(withRouter(RegisterFormContainer));

@@ -16,6 +16,8 @@ class UserLoader extends Component {
 
     try {
       await UserActions.checkLoginStatus();
+      await UserActions.getMetaInfo();
+
       if (!user || user._id !== this.props.user.get('_id')) {
         storage.set('BIT_USER', this.props.user.toJS());
       }
@@ -35,11 +37,11 @@ class UserLoader extends Component {
 
 export default connect(
   (state) => ({
-    user: state.user.get('user'),
+    user: state.user.get('user')
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),
-    UserActions: bindActionCreators(userActions, dispatch),
+    UserActions: bindActionCreators(userActions, dispatch)
   })
 )(UserLoader);

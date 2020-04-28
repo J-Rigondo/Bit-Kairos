@@ -16,7 +16,7 @@ export const checkEmail = async (ctx) => {
     const account = await User.findOne({ email });
 
     ctx.body = {
-      exists: !!account,
+      exists: !!account
     };
   } catch (e) {
     ctx.throw(e, 500);
@@ -30,7 +30,7 @@ export const checkDisplayName = async (ctx) => {
     const account = await User.findOne({ displayName });
 
     ctx.body = {
-      exists: !!account,
+      exists: !!account
     };
   } catch (e) {
     ctx.throw(e, 500);
@@ -50,8 +50,8 @@ export const localRegister = async (ctx) => {
     password: Joi.string().min(6).max(30),
     initialMoney: Joi.object({
       currency: Joi.string().allow('KRW', 'USD', 'BTC').required(),
-      index: Joi.number().min(0).max(2).required(),
-    }),
+      index: Joi.number().min(0).max(2).required()
+    })
   });
 
   const result = Joi.validate(body, schema);
@@ -66,14 +66,14 @@ export const localRegister = async (ctx) => {
   try {
     //check email existancy
     const exists = await User.findOne({
-      $or: [{ displayName }, { email }],
+      $or: [{ displayName }, { email }]
     });
 
     if (exists) {
       ctx.status = 409;
       const key = exists.email === email ? 'email' : 'displayName';
       ctx.body = {
-        key,
+        key
       };
       return;
     }
@@ -82,7 +82,7 @@ export const localRegister = async (ctx) => {
     const value = optionCurrency[currency].initialValue * Math.pow(10, index);
     const initial = {
       currency,
-      value,
+      value
     };
 
     //create user account
@@ -94,15 +94,15 @@ export const localRegister = async (ctx) => {
         .update(password)
         .digest('hex'),
       metaInfo: {
-        initial,
-      },
+        initial
+      }
     });
     user.wallet[currency] = value;
 
     const registResult = await user.save();
     ctx.body = {
       displayName,
-      _id: registResult._id,
+      _id: registResult._id
       //metaInfo: registResult.metaInfo
     };
 
@@ -111,8 +111,8 @@ export const localRegister = async (ctx) => {
       {
         user: {
           _id: registResult._id,
-          displayName,
-        },
+          displayName
+        }
       },
       'user'
     );
@@ -120,7 +120,7 @@ export const localRegister = async (ctx) => {
     // configure accessToken to httpOnly cookie
     const temp = ctx.cookies.set('access_token', accessToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7
     });
   } catch (e) {
     console.log(e);
@@ -135,7 +135,7 @@ export const localLogin = async (ctx) => {
   //type check
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().min(6).max(30),
+    password: Joi.string().min(6).max(30)
   });
 
   const result = Joi.validate(body, schema);
@@ -171,8 +171,8 @@ export const localLogin = async (ctx) => {
       {
         user: {
           _id,
-          displayName,
-        },
+          displayName
+        }
       },
       'user'
     );
@@ -180,12 +180,12 @@ export const localLogin = async (ctx) => {
     //set cookie
     ctx.cookies.set('access_token', accessToken, {
       httpOnly: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7
     });
 
     ctx.body = {
       _id,
-      displayName,
+      displayName
     };
   } catch (e) {
     ctx.throw(e);
@@ -202,13 +202,13 @@ export const check = (ctx) => {
   }
 
   ctx.body = {
-    user,
+    user
   };
 };
 
 export const socialLogin = async (ctx) => {
   const schema = Joi.object().keys({
-    accessToken: Joi.string().required(),
+    accessToken: Joi.string().required()
   });
 
   const result = Joi.validate(ctx.request.body, schema);
@@ -241,7 +241,7 @@ export const socialLogin = async (ctx) => {
   try {
     const key = `social.${provider}.id`;
     user = await User.findOne({
-      [key]: id,
+      [key]: id
     });
   } catch (e) {
     ctx.throw(e);
@@ -254,21 +254,21 @@ export const socialLogin = async (ctx) => {
         {
           user: {
             _id,
-            displayName,
-          },
+            displayName
+          }
         },
         'user'
       );
       ctx.cookies.set('access_token', newToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
       });
     } catch (e) {
       ctx.throw(e);
     }
     ctx.body = {
       _id,
-      displayName,
+      displayName
     };
     return;
   }
@@ -285,7 +285,7 @@ export const socialLogin = async (ctx) => {
     if (dupl) {
       dupl.social[provider] = {
         id,
-        accessToken,
+        accessToken
       };
 
       try {
@@ -300,14 +300,14 @@ export const socialLogin = async (ctx) => {
           {
             user: {
               _id,
-              displayName,
-            },
+              displayName
+            }
           },
           'user'
         );
         ctx.cookies.set('access_token', newToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 7,
+          maxAge: 1000 * 60 * 60 * 24 * 7
         });
       } catch (e) {
         ctx.throw(e);
@@ -315,13 +315,13 @@ export const socialLogin = async (ctx) => {
 
       ctx.body = {
         _id,
-        displayName,
+        displayName
       };
     }
   }
   ctx.body = {
     accessToken,
-    provider,
+    provider
   };
 };
 
@@ -336,8 +336,8 @@ export const socialRegister = async (ctx) => {
     accessToken: Joi.string().required(),
     initialMoney: Joi.object({
       currency: Joi.string().allow('KRW', 'USD', 'BTC').required(),
-      index: Joi.number().min(0).max(2).required(),
-    }),
+      index: Joi.number().min(0).max(2).required()
+    })
   });
 
   const result = Joi.validate(body, schema);
@@ -370,7 +370,7 @@ export const socialRegister = async (ctx) => {
     const exists = await User.findOne({ email: socialEmail });
     if (exists) {
       ctx.body = {
-        key: 'email',
+        key: 'email'
       };
       ctx.status = 409;
       return;
@@ -384,7 +384,7 @@ export const socialRegister = async (ctx) => {
     const exists = await User.findOne({ displayName });
     if (exists) {
       ctx.body = {
-        key: 'displayName',
+        key: 'displayName'
       };
       ctx.status = 409;
     }
@@ -397,7 +397,7 @@ export const socialRegister = async (ctx) => {
   const value = optionCurrency[currency].initialValue * Math.pow(10, index);
   const initial = {
     currency,
-    value,
+    value
   };
 
   const newUser = new User({
@@ -406,12 +406,12 @@ export const socialRegister = async (ctx) => {
     social: {
       [provider]: {
         id: socialId,
-        accessToken,
-      },
+        accessToken
+      }
     },
     metaInfo: {
-      initial,
-    },
+      initial
+    }
   });
 
   let saveResult = null;
@@ -424,7 +424,7 @@ export const socialRegister = async (ctx) => {
   const { _id, displayName: saveName } = saveResult;
   ctx.body = {
     displayName: saveName,
-    _id,
+    _id
   };
 
   try {
@@ -432,14 +432,14 @@ export const socialRegister = async (ctx) => {
       {
         user: {
           _id,
-          displayNam: saveName,
-        },
+          displayNam: saveName
+        }
       },
       'user'
     );
     ctx.cookies.set('access_token', newToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7
     });
   } catch (e) {
     ctx.throw(e);
@@ -449,7 +449,7 @@ export const socialRegister = async (ctx) => {
 export const logout = (ctx) => {
   ctx.cookies.set('access_token', null, {
     maxAge: 0,
-    httpOnly: true,
+    httpOnly: true
   });
   ctx.status = 204;
 };

@@ -1,0 +1,18 @@
+@import 'styles/utils';
+
+.pinup {
+  font-size: 1.6rem;
+  margin-right: 0.4rem;
+  cursor: pointer;
+
+  svg {
+    color: material-color('grey', '600');
+    &:hover {
+      color: material-color('red', '600');
+    }
+    &.active,
+    &:active {
+      color: material-color('red', '600');
+    }
+  }
+}

@@ -2,7 +2,6 @@ import * as token from '../token';
 
 export const tokenCheck = async (ctx, next) => {
   const accessToken = ctx.cookies.get('access_token');
-
   if (!accessToken) {
     ctx.request.user = null;
     return next(); // if there is no token, skip it.
@@ -21,6 +20,7 @@ export const tokenCheck = async (ctx, next) => {
     }
     ctx.request.user = user;
   } catch (e) {
+    console.log(e);
     ctx.request.user = null;
   }
   return next();

@@ -5,7 +5,6 @@
   width: calc(100% / 6);
   .rate-info-card {
     padding: 1rem;
-    border: 1px solid black;
     .head {
       display: flex;
       align-items: center;
@@ -17,8 +16,17 @@
         font-size: 1.15rem;
         color: material-color('grey', '500');
         margin-left: auto;
-        &.active {
+        &:hover {
+          color: material-color('grey', '800');
+        }
+        &.active,
+        &:active {
           color: material-color('red', '600');
+        }
+        &.active {
+          &:hover {
+            color: material-color('red', '500');
+          }
         }
       }
     }
@@ -26,10 +34,10 @@
       margin-top: 0.25rem;
       text-align: center;
       font-size: 0.9rem;
-      font-weight: 600;
+      font-weight: 800;
       color: material-color('red', '600');
       &.positive {
-        color: #00e676;
+        color: #22c8a0;
       }
       &.neutral {
         color: material-color('grey', '600');

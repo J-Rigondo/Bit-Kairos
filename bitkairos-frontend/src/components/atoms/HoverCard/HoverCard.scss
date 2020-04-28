@@ -3,6 +3,7 @@
 .hover-card {
   background: white;
   transition: 0.3s ease-in;
+  border-radius: 0.5rem;
   &:hover {
     @include material-shadow(4);
   }
