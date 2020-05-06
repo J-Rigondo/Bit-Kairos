@@ -4,10 +4,18 @@ import './styles/main.scss';
 import Root from './components/Root';
 import * as serviceWorker from './serviceWorker';
 import configureStore from 'store/configure';
-import social from 'lib/social';
+import socket from 'lib/socket';
 
-window.social = social;
+const socketURI =
+  process.env.NODE_ENV === 'production'
+    ? (window.location.protocol === 'https//' ? 'wss://' : 'ws://') +
+      window.location.host +
+      '/ws'
+    : 'ws://localhost:4000/ws';
+
 const store = configureStore();
+
+socket.initialize(store, socketURI);
 
 ReactDOM.render(<Root store={store} />, document.getElementById('root'));
 

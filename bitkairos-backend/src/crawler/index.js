@@ -23,7 +23,7 @@ export const registerInitialExchangeRate = async () => {
       return;
     }
 
-    const data = Object.assign({ name: key }, ticker);
+    const data = Object.assign({ name: key.split('_')[1] }, ticker);
     const exchangeRate = new Rate(data);
     return exchangeRate.save();
   });

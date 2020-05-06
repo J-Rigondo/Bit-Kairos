@@ -7,6 +7,7 @@ import * as exchangeAPI from 'lib/api/exchange';
 const GET_INITIAL_RATE = 'trade/GET_INITIAL_RATE';
 const SET_INDEX_OPTION = 'trade/SET_INDEX_OPTION';
 const TOGGLE_SHOW_PINNED = 'trade/TOGGLE_SHOW_PINNED';
+const UPDATE_TICKER = 'trade/UPDATE_TICKER';
 
 //action creator
 export const getInitialRate = createAction(
@@ -15,13 +16,14 @@ export const getInitialRate = createAction(
 );
 export const setIndexOption = createAction(SET_INDEX_OPTION);
 export const toggleShowPinned = createAction(TOGGLE_SHOW_PINNED);
+export const updateTicker = createAction(UPDATE_TICKER);
 
 //initial state
 const initialState = Map({
   rate: List([]),
   index: Map({
     options: Map({
-      sortBy: 'alphabet',
+      sortBy: 'volume',
       asc: false,
       showPinned: false
     })
@@ -52,6 +54,14 @@ export default handleActions(
         ['index', 'options', 'showPinned'],
         (value) => !value
       );
+    },
+    [UPDATE_TICKER]: (state, action) => {
+      const { payload: data } = action;
+      const index = state
+        .get('rate')
+        .findIndex((ticker) => ticker.get('name') === data.name);
+
+      return state.mergeIn(['rate', index], data);
     }
   },
 

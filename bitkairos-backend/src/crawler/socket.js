@@ -43,15 +43,18 @@ client.on('connect', (connection) => {
           { upsert: false, new: true }
         );
 
-        //console.log(`updated: ${name} ${new Date()}`);
+        console.log(`updated: ${name} ${new Date()}`);
         //log('updated', name);
+        const { last, percentChange, baseVolume, quoteVolume } = temp;
         const message = JSON.stringify({
-          type: 0,
-          data: {
-            ...rest,
-            updatedAt: new Date()
-          }
+          name,
+          last: parseFloat(last),
+          percentChange: parseFloat(percentChange),
+          baseVolume: parseFloat(baseVolume),
+          quoteVolume: parseFloat(quoteVolume),
+          updatedAt: new Date()
         });
+
         publisher.publish('tickers', message);
       } catch (e) {
         log.error(`update error: ${e}`);

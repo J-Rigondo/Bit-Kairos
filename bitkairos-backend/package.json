@@ -18,6 +18,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^8.0.8",
     "koa-websocket": "^6.0.0",
+    "lzutf8": "^0.5.5",
     "moment": "^2.24.0",
     "mongoose": "^5.9.2",
     "redis": "^3.0.2",

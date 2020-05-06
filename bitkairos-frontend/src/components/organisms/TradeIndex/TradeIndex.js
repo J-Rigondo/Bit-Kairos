@@ -1,5 +1,5 @@
 import React from 'react';
-import { HoverCard, RateInfoCard } from 'components';
+import { RateInfoCard } from 'components';
 import styles from './TradeIndex.scss';
 import classNames from 'classnames/bind';
 
@@ -12,6 +12,7 @@ const TradeIndex = ({ rate, onTogglePin, pinMap, showPinned }) => {
 
   const rateInfoCardList = filtered.map((info) => (
     <RateInfoCard
+      info={info}
       key={info.get('name')}
       keyPair={info.get('name')}
       percentage={info.get('percentChange')}

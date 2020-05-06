@@ -25,7 +25,7 @@ router.use('/api', api.routes());
 app.ws.use(ws.routes()).use(ws.allowedMethods());
 
 app.use((ctx) => {
-  console.log('hello kairos');
+  console.log('hello kairos', new Date());
   ctx.body = 'hihi kairos';
 });
 

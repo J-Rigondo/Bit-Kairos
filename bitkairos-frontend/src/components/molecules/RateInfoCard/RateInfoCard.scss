@@ -4,6 +4,14 @@
   padding: 0.5rem;
   width: calc(100% / 6);
   .rate-info-card {
+    cursor: pointer;
+    border: 2px solid transparent;
+    &.green {
+      border: 2px solid material-color('green', '300');
+    }
+    &.red {
+      border: 2px solid material-color('red', '300');
+    }
     padding: 1rem;
     .head {
       display: flex;
