@@ -1,0 +1,7 @@
+@import 'styles/utils';
+
+.white-card {
+  background: white;
+  @include material-shadow(1, 0.5);
+  padding: 1rem;
+}

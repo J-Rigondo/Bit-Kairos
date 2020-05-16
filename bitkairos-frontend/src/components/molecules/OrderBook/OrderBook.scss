@@ -1,0 +1,18 @@
+@import 'styles/utils';
+
+.orderBook-wrapper {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  .OB-column {
+    flex: 1;
+
+    .column-name {
+      font-weight: 600;
+      color: material-color('grey', '800');
+    }
+  }
+  .OB-column + .OB-column {
+    margin-left: 1rem;
+  }
+}

@@ -7,7 +7,9 @@ import * as authActions from 'store/modules/auth';
 
 class TradeChartContainer extends Component {
   render() {
-    return <TradeChart />;
+    const { currencyKey } = this.props;
+
+    return <TradeChart currencyKey={currencyKey} />;
   }
 }
 

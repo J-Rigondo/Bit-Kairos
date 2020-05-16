@@ -1,0 +1,27 @@
+@import 'styles/utils';
+
+.orders-table {
+  .order-title {
+    font-weight: 600;
+    color: material-color('grey', '800');
+  }
+  .order-info {
+    display: flex;
+    margin-top: 1rem;
+    .col-desc {
+      flex: 1;
+    }
+  }
+  .row {
+    display: flex;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    .value {
+      flex: 1;
+      font-size: 0.85rem;
+    }
+    &:nth-child(even) {
+      background: material-color('grey', '200');
+    }
+  }
+}

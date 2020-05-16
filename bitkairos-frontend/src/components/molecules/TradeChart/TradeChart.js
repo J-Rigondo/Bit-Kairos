@@ -11,6 +11,11 @@ class TradeChart extends Component {
   }
 
   componentDidMount() {
+    const { currencyKey } = this.props;
+    let chartKey;
+
+    if (currencyKey === 'BTC') chartKey = currencyKey + 'USD';
+    else chartKey = 'POLONIEX:' + currencyKey + 'BTC';
     //const scriptSrc = document.createElement('script');
     const script = document.createElement('script');
     //scriptSrc.src = 'https://s3.tradingview.com/tv.js';
@@ -20,8 +25,8 @@ class TradeChart extends Component {
     script.innerHTML = `new TradingView.widget(
       {
       "width": "100%",
-      "height":800,
-      "symbol":"BTCUSD",
+      "height":500,
+      "symbol":"${chartKey}",
       "interval": "D",
       "timezone": "Etc/UTC",
       "theme": "light",
