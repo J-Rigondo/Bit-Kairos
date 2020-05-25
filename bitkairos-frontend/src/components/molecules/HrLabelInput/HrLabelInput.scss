@@ -1,0 +1,31 @@
+@import 'styles/utils';
+
+.horizontal-label-input {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  label {
+    font-weight: 600;
+  }
+  input {
+    width: 60%;
+    margin-left: auto;
+    padding-right: 3rem;
+  }
+
+  .currency-unit {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-56%);
+    right: 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: material-color('grey', '600');
+  }
+}
+
+.horizontal-label-input + .horizontal-label-input {
+  margin-top: 0.8rem;
+}

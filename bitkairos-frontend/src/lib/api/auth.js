@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+export const realEmail = (email) =>
+  axios.get('http://localhost:4000/api/v1.0/auth/real-email/' + email);
+
+export const findPwd = (email) =>
+  axios.get('http://localhost:4000/api/v1.0/auth/find-password/' + email);
+
 export const checkEmail = (email) =>
   axios.get('/api/v1.0/auth/email-check/' + email);
 
@@ -10,7 +16,7 @@ export const register = ({
   displayName,
   email,
   password,
-  initialMoney: { currency, index },
+  initialMoney: { currency, index }
 }) =>
   axios.post('/api/v1.0/auth/register/local', {
     displayName,
@@ -18,8 +24,8 @@ export const register = ({
     password,
     initialMoney: {
       currency,
-      index,
-    },
+      index
+    }
   });
 
 export const localLogin = ({ email, password }) =>
@@ -31,17 +37,17 @@ export const logout = () => axios.get('/api/v1.0/auth/logout');
 
 export const socialLogin = (provider, accessToken) =>
   axios.post('/api/v1.0/auth/login/' + provider, {
-    accessToken,
+    accessToken
   });
 
 export const socialRegister = ({
   displayName,
   accessToken,
   initialMoney,
-  provider,
+  provider
 }) =>
   axios.post('/api/v1.0/auth/register/' + provider, {
     displayName,
     accessToken,
-    initialMoney,
+    initialMoney
   });

@@ -16,7 +16,7 @@ class App extends Component {
         <Route path="/register" component={RegisterPage} />
         <ScreenMaskContainer />
         <LoginModalContainer />
-        <UserLoader />
+        {/*<UserLoader />*/}
       </>
     );
   }

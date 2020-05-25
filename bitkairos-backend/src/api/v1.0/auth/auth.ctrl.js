@@ -4,6 +4,104 @@ import User from 'db/model/User';
 import * as token from 'lib/token';
 import { optionCurrency } from 'lib/variables';
 import { getProfile } from 'lib/social';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+import generatePwd from 'generate-password';
+
+dotenv.config();
+
+export const realCheck = async (ctx) => {
+  const { email } = ctx.params;
+
+  try {
+    await User.findOneAndUpdate(
+      { email },
+      { valid: true },
+      { upsert: false, new: true }
+    );
+  } catch (e) {
+    ctx.throw(e, 500);
+  }
+
+  ctx.body = '<h1> 인증을 완료하였습니다!</h1> <h2>환영합니다</h2>';
+};
+
+export const realEmail = (ctx) => {
+  const { email } = ctx.params;
+
+  try {
+    const mailConfig = {
+      service: 'Naver',
+      host: 'smtp.naver.com',
+      port: 9000,
+      auth: {
+        user: process.env.MAIL_EMAIL,
+        pass: process.env.MAIL_PASSWORD
+      }
+    };
+
+    const url = `http://localhost:4000/api/v1.0/auth/real-check/${email}`;
+
+    let message = {
+      from: process.env.MAIL_EMAIL,
+      to: email,
+      subject: 'BITKAIROS 이메일 인증 URL입니다.',
+      html: `<p> URL을 클릭하여 인증을 완료하세요! </p> <p><a href='${url}'>인증 URL 클릭</a></p>`
+    };
+
+    let transporter = nodemailer.createTransport(mailConfig);
+    transporter.sendMail(message);
+  } catch (error) {
+    ctx.throw(e, 500);
+  }
+};
+
+export const findPwd = async (ctx) => {
+  const { email } = ctx.params;
+  const { PASSWORD_HASH_KEY: secret } = process.env;
+
+  const password = generatePwd.generate({
+    length: 10,
+    numbers: true
+  });
+
+  const cryptoPwd = crypto
+    .createHmac('sha256', secret)
+    .update(password)
+    .digest('hex');
+
+  try {
+    await User.findOneAndUpdate(
+      { email },
+      { password: cryptoPwd },
+      { upsert: false, new: true }
+    );
+
+    const mailConfig = {
+      service: 'Naver',
+      host: 'smtp.naver.com',
+      port: 9000,
+      auth: {
+        user: process.env.MAIL_EMAIL,
+        pass: process.env.MAIL_PASSWORD
+      }
+    };
+
+    let message = {
+      from: process.env.MAIL_EMAIL,
+      to: email,
+      subject: 'BITKAIROS 임시 비밀번호입니다.',
+      html: `<p> 임시 비밀번호는 ${password}입니다.  </p>`
+    };
+
+    let transporter = nodemailer.createTransport(mailConfig);
+    transporter.sendMail(message);
+  } catch (error) {
+    ctx.throw(e, 500);
+  }
+
+  ctx.body = `<p>${cryptoPwd}<p>`;
+};
 
 export const checkEmail = async (ctx) => {
   const { email } = ctx.params;
@@ -149,7 +247,7 @@ export const localLogin = async (ctx) => {
   try {
     //check email existancy
     const exists = await User.findOne({ email });
-    if (!exists) {
+    if (!exists || !exists.valid) {
       ctx.status = 403;
       return;
     }

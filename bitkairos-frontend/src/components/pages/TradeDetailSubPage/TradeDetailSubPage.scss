@@ -1,4 +1,17 @@
-.trade-detail {
-  width: 1200px;
-  margin: 0 auto;
+.tradeDetail-wrapper {
+  background: #fafafa;
+  .trade-main {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2rem;
+    padding: 1rem;
+    background: #045a93;
+    color: white;
+  }
+  .trade-detail {
+    width: 1200px;
+    margin: 0 auto;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
 }

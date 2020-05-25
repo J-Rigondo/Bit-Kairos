@@ -35,7 +35,7 @@ class LoginModalContainer extends Component {
     const { name, value } = e.target;
     AuthActions.changeInput({
       name,
-      value,
+      value
     });
   };
 
@@ -64,15 +64,15 @@ class LoginModalContainer extends Component {
     const constraints = {
       email: {
         email: {
-          message: '^잘못된 형식의 이메일입니다',
-        },
+          message: '^잘못된 형식의 이메일입니다'
+        }
       },
       password: {
         length: {
           minimum: 6,
-          tooShort: '^비밀번호는 %{count}자 이상 입력하세요.',
-        },
-      },
+          tooShort: '^비밀번호는 %{count}자 이상 입력하세요.'
+        }
+      }
     };
 
     const form = forms.toJS();
@@ -87,6 +87,16 @@ class LoginModalContainer extends Component {
       if (this.props.error) {
         return;
       }
+    } catch (e) {
+      console.log(e);
+    }
+
+    //check exist real email
+    try {
+      AuthActions.realEmail(form.email);
+      alert(
+        '이메일 인증을 발송하였습니다. 인증을 통해 아이디를 활성화 시켜주세요!'
+      );
     } catch (e) {
       console.log(e);
     }
@@ -118,6 +128,24 @@ class LoginModalContainer extends Component {
     }
   };
 
+  handleFindPwd = async () => {
+    const { AuthActions, forms } = this.props;
+    const email = forms.get('email');
+
+    //validate email
+
+    const error = validate.single(email, { presence: true, email: true });
+
+    console.log(error);
+    if (!email || error) {
+      alert('올바른 이메일은 입력해주세요.');
+      return;
+    }
+
+    alert(`${email}로 임시 비밀번호를 발송하였습니다.`);
+    AuthActions.findPwd(email);
+  };
+
   render() {
     const { visible, mode, forms, error } = this.props;
 
@@ -132,6 +160,7 @@ class LoginModalContainer extends Component {
         onLogin={this.handleLoginClick}
         onRegister={this.handleRegisterClick}
         onSocial={this.handleSocialLogin}
+        onFindPwd={this.handleFindPwd}
       />
     );
   }
@@ -145,12 +174,12 @@ export default connect(
     error: state.auth.get('error'),
     loginResult: state.auth.get('loginResult'),
     redirectToRegister: state.auth.get('redirectToRegister'),
-    socialInfo: state.auth.get('socialInfo'),
+    socialInfo: state.auth.get('socialInfo')
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch),
     AuthActions: bindActionCreators(authActions, dispatch),
     RegisterActions: bindActionCreators(registerActions, dispatch),
-    UserActions: bindActionCreators(userActions, dispatch),
+    UserActions: bindActionCreators(userActions, dispatch)
   })
 )(withRouter(onClickOutside(LoginModalContainer)));

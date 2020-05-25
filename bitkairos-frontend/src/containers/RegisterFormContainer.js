@@ -81,6 +81,8 @@ class RegisterFormContainer extends Component {
       return;
     }
 
+    //real email exist
+
     //local register
     const { email, password } = authForm.toJS();
 

@@ -25,7 +25,7 @@ class TradeChart extends Component {
     script.innerHTML = `new TradingView.widget(
       {
       "width": "100%",
-      "height":500,
+      "height":600,
       "symbol":"${chartKey}",
       "interval": "D",
       "timezone": "Etc/UTC",

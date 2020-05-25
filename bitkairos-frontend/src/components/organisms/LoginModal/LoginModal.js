@@ -21,7 +21,8 @@ const LoginModal = ({
   onChangeInput,
   onLogin,
   onRegister,
-  onSocial
+  onSocial,
+  onFindPwd
 }) => {
   const isLogin = mode === 'login';
   const modeText = isLogin ? '로그인' : '회원가입';
@@ -63,7 +64,9 @@ const LoginModal = ({
           <InputError error={localLoginError} />
           <div className={cx('textBtn-area')}>
             <TextButton onClick={onChangeMode}>{invertedText}</TextButton>
-            <TextButton right>비밀번호 찾기</TextButton>
+            <TextButton onClick={onFindPwd} right>
+              비밀번호 찾기
+            </TextButton>
           </div>
           <div className={cx('separator')}>
             <div className={cx('or')}>OR</div>

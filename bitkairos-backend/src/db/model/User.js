@@ -10,6 +10,7 @@ const Wallet = new mongoose.Schema(
 );
 
 const User = new mongoose.Schema({
+  valid: { type: Boolean, default: false },
   displayName: String,
   email: String,
   social: {

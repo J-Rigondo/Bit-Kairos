@@ -11,6 +11,8 @@ const SET_ERROR = 'auth/SET_ERROR';
 const CHECK_EMAIL = 'auth/CHECK_EMAIL';
 const LOCAL_LOGIN = 'auth/LOCAL_LOGIN';
 const SOCIAL_LOGIN = 'auth/SOCIAL_LOGIN';
+const FIND_PASSWORD = 'auth/FIND_PASSWORD';
+const REAL_EMAIL = 'auth/REAL_EMAIL';
 
 //action creator
 export const toggleLoginModal = createAction(TOGGLE_LOGIN_MODAL);
@@ -20,21 +22,23 @@ export const setError = createAction(SET_ERROR);
 export const checkEmail = createAction(CHECK_EMAIL, AuthAPI.checkEmail);
 export const localLogin = createAction(LOCAL_LOGIN, AuthAPI.localLogin);
 export const socialLogin = createAction(SOCIAL_LOGIN, AuthAPI.socialLogin);
+export const findPwd = createAction(FIND_PASSWORD, AuthAPI.findPwd);
+export const realEmail = createAction(REAL_EMAIL, AuthAPI.realEmail);
 
 //initial state
 const initialState = Map({
   modal: Map({
     visible: false,
-    mode: 'login',
+    mode: 'login'
   }),
   forms: Map({
     email: '',
-    password: '',
+    password: ''
   }),
   error: null,
   loginResult: null,
   socialInfo: null,
-  redirectToRegister: false,
+  redirectToRegister: false
 });
 
 //reducer
@@ -67,7 +71,7 @@ export default handleActions(
         return exists
           ? state.set('error', Map({ email: '메일이 이미 존재합니다.' }))
           : state;
-      },
+      }
     }),
     ...pender({
       type: LOCAL_LOGIN,
@@ -79,9 +83,9 @@ export default handleActions(
       onFailure: (state, action) => {
         return state.set(
           'error',
-          Map({ localLogin: '잘못된 계정 정보입니다.' })
+          Map({ localLogin: '정보 오류 또는 비활성화 계정입니다.' })
         );
-      },
+      }
     }),
     ...pender({
       type: SOCIAL_LOGIN,
@@ -94,8 +98,20 @@ export default handleActions(
             .set('socialInfo', loginResult);
         }
         return state.set('loginResult', Map(loginResult)).set('error', null);
-      },
+      }
     }),
+    ...pender({
+      type: FIND_PASSWORD,
+      onSuccess: (state, action) => {
+        return state;
+      }
+    }),
+    ...pender({
+      type: REAL_EMAIL,
+      onSuccess: (state, action) => {
+        return state;
+      }
+    })
   },
   initialState
 );
