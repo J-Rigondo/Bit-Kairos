@@ -11,6 +11,7 @@ const LOGOUT = 'user/LOGOUT';
 const GET_META_INFO = 'user/GET_META_INFO';
 const PATCH_META_INFO = 'user/PATCH_META_INFO';
 const TOGGLE_PIN_KEY = 'user/TOGGLE_PIN_KEY';
+const GET_WALLET = 'user/GET_WALLET';
 
 //action creator
 export const setUser = createAction(SET_USER);
@@ -25,6 +26,7 @@ export const patchMetaInfo = createAction(
   UserAPI.patchMetaInfo
 );
 export const togglePinKey = createAction(TOGGLE_PIN_KEY);
+export const getWallet = createAction(GET_WALLET, UserAPI.getWallet);
 
 //initial state
 const initialState = Map({
@@ -32,7 +34,9 @@ const initialState = Map({
   user: null,
   metaInfo: Map({
     pinned: List([])
-  })
+  }),
+  wallet: Map({}),
+  walletOnOrder: Map({})
 });
 
 //reducer
@@ -71,7 +75,17 @@ export default handleActions(
       }
       //found
       return state.deleteIn(['metaInfo', 'pinned', index]);
-    }
+    },
+    ...pender({
+      type: GET_WALLET,
+      onSuccess: (state, action) => {
+        const { wallet, walletOnOrder } = action.payload.data;
+
+        return state
+          .set('wallet', fromJS(wallet))
+          .set('walletOnOrder', fromJS(walletOnOrder));
+      }
+    })
   },
   initialState
 );

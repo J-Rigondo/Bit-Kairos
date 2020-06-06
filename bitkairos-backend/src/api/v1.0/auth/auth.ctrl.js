@@ -23,7 +23,11 @@ export const realCheck = async (ctx) => {
     ctx.throw(e, 500);
   }
 
-  ctx.body = '<h1> 인증을 완료하였습니다!</h1> <h2>환영합니다</h2>';
+  ctx.body = `<div style="border:1px solid; position:absolute; border-radius:1rem;
+  text-align:center;top:50%; left:50%; transform:translate(-50%,-60%); padding:5rem; ">
+ <h1> 비트 카이로스 계정 등록을 환영합니다!</h1>
+  <h2 style="font-weight:500; ">실제와 같은 환경에서 트레이딩을 연습하세요! </h2>
+ </div>`;
 };
 
 export const realEmail = (ctx) => {
@@ -46,7 +50,7 @@ export const realEmail = (ctx) => {
       from: process.env.MAIL_EMAIL,
       to: email,
       subject: 'BITKAIROS 이메일 인증 URL입니다.',
-      html: `<p> URL을 클릭하여 인증을 완료하세요! </p> <p><a href='${url}'>인증 URL 클릭</a></p>`
+      html: `<h2> URL을 클릭하여 인증을 완료하세요! </h2> <h1><a href='${url}'>인증 URL 클릭</a></h1>`
     };
 
     let transporter = nodemailer.createTransport(mailConfig);
@@ -91,7 +95,7 @@ export const findPwd = async (ctx) => {
       from: process.env.MAIL_EMAIL,
       to: email,
       subject: 'BITKAIROS 임시 비밀번호입니다.',
-      html: `<p> 임시 비밀번호는 ${password}입니다.  </p>`
+      html: `<h1> 임시 비밀번호는 ${password}입니다.  </h1>`
     };
 
     let transporter = nodemailer.createTransport(mailConfig);
@@ -264,12 +268,13 @@ export const localLogin = async (ctx) => {
     }
 
     //create token
-    const { _id, displayName } = exists;
+    const { _id, displayName, valid } = exists;
     const accessToken = await token.generateToken(
       {
         user: {
           _id,
-          displayName
+          displayName,
+          valid
         }
       },
       'user'
@@ -283,7 +288,8 @@ export const localLogin = async (ctx) => {
 
     ctx.body = {
       _id,
-      displayName
+      displayName,
+      valid
     };
   } catch (e) {
     ctx.throw(e);
@@ -509,9 +515,12 @@ export const socialRegister = async (ctx) => {
     },
     metaInfo: {
       initial
-    }
+    },
+    valid: true,
+    initial
   });
 
+  newUser.wallet[currency] = value;
   let saveResult = null;
   try {
     saveResult = await newUser.save();

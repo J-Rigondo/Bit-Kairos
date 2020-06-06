@@ -36,6 +36,32 @@
       background: #045a93;
     }
   }
+  &.trade-btn {
+    margin-top: 0.9rem;
+    padding: 1rem;
+    text-align: center;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: #b71c1c;
+    &:hover {
+      background: #e53935;
+    }
+    &:active {
+      background: #e53935;
+    }
+    &.sell {
+      background: #00695c;
+      &:hover {
+        background: #00897b;
+      }
+      &:active {
+        background: #00897b;
+      }
+    }
+  }
+  &.invalid-btn {
+  }
   &.main-start {
     border: 2px solid white;
     background: transparent;
@@ -51,6 +77,11 @@
       background: #eeeeee;
     }
   }
+  &.flex {
+    display: flex;
+    justify-content: center;
+  }
+
   &.disabled {
     background: material-color('grey', '300');
     color: material-color('grey', '500');

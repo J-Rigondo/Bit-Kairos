@@ -17,14 +17,23 @@ class UserLoader extends Component {
     try {
       await UserActions.checkLoginStatus();
       await UserActions.getMetaInfo();
+      await UserActions.getWallet();
 
       if (!user || user._id !== this.props.user.get('_id')) {
         storage.set('BIT_USER', this.props.user.toJS());
       }
     } catch (e) {
       storage.remove('BIT_USER');
+      return;
     }
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    //recheck login status when userId changes
+    if (!prevProps.user && this.props.user) {
+      this.checkLoginStatus();
+    }
+  }
 
   componentDidMount() {
     this.checkLoginStatus();

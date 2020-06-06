@@ -33,7 +33,7 @@ class TradeDetailSubPage extends Component {
         <div className={cx('trade-main')}>{currencyKey}</div>
         <div className={cx('trade-detail')}>
           <TradeChartContainer currencyKey={currencyKey} />
-          <TradeSectionContainer />
+          <TradeSectionContainer currencyKey={currencyKey} />
           <OrderBookContainer currencyKey={currencyKey} />
         </div>
       </div>

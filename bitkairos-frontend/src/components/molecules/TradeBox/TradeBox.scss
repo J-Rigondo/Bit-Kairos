@@ -2,14 +2,17 @@
 
 .trade-box {
   .head {
-    background-color: #045a93;
+    background-color: #b71c1c;
+    &.sell {
+      background-color: #00695c;
+    }
     color: white;
     padding: 1rem;
     display: flex;
     flex-direction: row;
     align-items: center;
     .title {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: 500;
     }
     .has-amount {
@@ -24,7 +27,23 @@
   .content {
     padding: 1rem;
     background: white;
-    &.bottom {
+    .calc-helper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.7rem;
+      .help-button {
+        font-size: 0.9rem;
+        cursor: pointer;
+        &:hover {
+          color: #045a93;
+          font-weight: bold;
+        }
+      }
+      .help-button + .help-button {
+        margin-left: 1rem;
+      }
+    }
+    &.blue {
       padding-top: 1rem;
       padding-bottom: 1rem;
       display: flex;
@@ -41,6 +60,9 @@
         margin-left: 0.1rem;
         font-size: 0.9rem;
         color: material-color('grey', '600');
+      }
+      .btn {
+        text-align: center;
       }
     }
   }

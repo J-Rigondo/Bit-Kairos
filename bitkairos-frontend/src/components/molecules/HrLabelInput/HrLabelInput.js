@@ -5,11 +5,11 @@ import { Input } from 'components';
 
 const cx = className.bind(styles);
 
-const HrLabelInput = ({ label, currency }) => {
+const HrLabelInput = ({ label, currency, ...rest }) => {
   return (
     <div className={cx('horizontal-label-input')}>
       <label>{label}</label>
-      <Input />
+      <Input {...rest} />
       {currency && <div className={cx('currency-unit')}>{currency}</div>}
     </div>
   );

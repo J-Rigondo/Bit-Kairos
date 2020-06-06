@@ -95,7 +95,7 @@ class LoginModalContainer extends Component {
     try {
       AuthActions.realEmail(form.email);
       alert(
-        '이메일 인증을 발송하였습니다. 인증을 통해 아이디를 활성화 시켜주세요!'
+        '이메일 인증을 발송하였습니다.\n인증을 통해 아이디를 활성화 시켜주세요!'
       );
     } catch (e) {
       console.log(e);

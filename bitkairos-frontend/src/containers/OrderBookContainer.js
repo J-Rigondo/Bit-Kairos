@@ -16,7 +16,6 @@ class OrderBookContainer extends Component {
     try {
       const getOrder = TradeActions.getOrderBook(currencyPair);
       this.cancel = getOrder.cancel;
-      console.log(getOrder.cancel);
 
       await getOrder;
     } catch (e) {

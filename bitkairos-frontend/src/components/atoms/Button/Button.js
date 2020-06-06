@@ -4,16 +4,18 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(styles);
 
-const Button = ({ children, className, disabled, ...rest }) => {
+const Button = ({ children, className, onClick, disabled, flex, ...rest }) => {
   return (
     <div
       className={cx(
         'button',
         {
-          disabled: disabled
+          disabled: disabled,
+          flex: flex
         },
         className
       )}
+      onClick={disabled ? undefined : onClick}
       {...rest}
     >
       {children}

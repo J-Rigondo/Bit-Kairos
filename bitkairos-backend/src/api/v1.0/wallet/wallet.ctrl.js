@@ -10,7 +10,11 @@ export const get = async (ctx) => {
 
   try {
     const userData = await User.findOne({ _id: user._id });
-    ctx.body = userData.wallet;
+    const { wallet, walletOnOrder } = userData;
+    ctx.body = {
+      wallet,
+      walletOnOrder
+    };
   } catch (e) {
     ctx.throw(e);
   }

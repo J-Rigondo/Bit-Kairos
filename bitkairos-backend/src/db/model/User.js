@@ -1,14 +1,5 @@
 import mongoose from 'mongoose';
 
-const Wallet = new mongoose.Schema(
-  {
-    BTC: Number,
-    USD: Number,
-    KRW: Number
-  },
-  { _id: false }
-);
-
 const User = new mongoose.Schema({
   valid: { type: Boolean, default: false },
   displayName: String,
@@ -32,10 +23,17 @@ const User = new mongoose.Schema({
     pinned: [String]
   },
   wallet: {
-    type: Wallet,
+    type: mongoose.Schema.Types.Mixed,
     default: {
       BTC: 0,
       KRW: 0,
+      USD: 0
+    }
+  },
+  walletOnOrder: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {
+      BTC: 0,
       USD: 0
     }
   }

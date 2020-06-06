@@ -31,10 +31,6 @@ function decompress(data) {
   });
 }
 
-const packetTypes = {
-  UPDATE_TICKER: 1
-};
-
 export default (function () {
   let _store = null;
   let _socket = null;
@@ -43,28 +39,27 @@ export default (function () {
   let _subscribed = [];
 
   function handlePacket(message) {
-    const { code, data } = message;
-    const { UPDATE_TICKER } = packetTypes;
-    const parsed = parseJSON(data);
-    //console.log(parsed);
+    const { type, payload } = message;
+    const parsed = parseJSON(payload);
     if (!parsed) return;
 
     const handlers = {
-      [UPDATE_TICKER]: () => {
+      TICKER: () => {
         _store.dispatch(updateTicker(parsed));
       }
     };
-    handlers[code]();
+    handlers[type]();
   }
 
   const listener = async (message) => {
     try {
       const decompressed = await decompress(message.data);
       const data = parseJSON(decompressed);
+
       handlePacket(data);
-      if (!data || data.code) return;
+      if (!data || !data.type) return;
     } catch (e) {
-      console.log('failed to parse data');
+      console.log('failed to parse data', e);
     }
   };
 
@@ -101,8 +96,8 @@ export default (function () {
     console.log('subscribing to ' + key);
     _socket.send(
       JSON.stringify({
-        code: msgTypes.subscribe,
-        data: key
+        type: msgTypes.subscribe,
+        payload: key
       })
     );
   };
@@ -120,8 +115,8 @@ export default (function () {
     console.log('unsubscribing ' + key);
     _socket.send(
       JSON.stringify({
-        code: msgTypes.unsubscribe,
-        data: key
+        type: msgTypes.unsubscribe,
+        payload: key
       })
     );
   };
