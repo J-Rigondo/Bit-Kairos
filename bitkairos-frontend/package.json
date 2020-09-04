@@ -59,7 +59,7 @@
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
     "prop-types": "^15.7.2",
-    "react": "^0.0.0-d28bd2994",
+    "react": "^0.14.0",
     "react-app-polyfill": "^1.0.6",
     "react-dev-utils": "^10.2.0",
     "react-dom": "^0.0.0-d28bd2994",
