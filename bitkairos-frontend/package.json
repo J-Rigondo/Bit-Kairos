@@ -61,7 +61,7 @@
     "prop-types": "^15.7.2",
     "react": "^0.0.0-d28bd2994",
     "react-app-polyfill": "^1.0.6",
-    "react-dev-utils": "^10.2.0",
+    "react-dev-utils": "^11.0.4",
     "react-dom": "^0.0.0-d28bd2994",
     "react-icons": "^3.9.0",
     "react-onclickoutside": "^6.9.0",
